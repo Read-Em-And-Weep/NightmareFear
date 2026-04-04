@@ -1257,7 +1257,7 @@ if ZagreusJourney then
 			if not newEnemy.DontDieWithEncounter then
 				table.insert(encounter.PassiveRoomWeapons, newEnemy.ObjectId)
 			end
-	local newEnemy2 = DeepCopyTable( EnemyData[chosenWeapon] )
+	--[[local newEnemy2 = DeepCopyTable( EnemyData[chosenWeapon] )
 			newEnemy2.ObjectId = SpawnUnit({ Name = chosenWeapon, Group = "Standing", DestinationId = CurrentRun.Hero.ObjectId })	
 			thread(SetupUnit, newEnemy2, CurrentRun )
 			newEnemy2.Groups = newEnemy2.Groups or {}
@@ -1267,7 +1267,7 @@ if ZagreusJourney then
 			
 			if not newEnemy2.DontDieWithEncounter then
 				table.insert(encounter.PassiveRoomWeapons, newEnemy2.ObjectId)
-			end
+			end]]
 
 end
 --[[function mod.SetUpBetrayalEncounters()
