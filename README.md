@@ -3,6 +3,8 @@ Have you ever thought that the fear options in Hades are way to easy? That 67 is
 
 Welcome to Nightmare Fear, which offers 17 new vows for you to try and conquer. Can you manage a 134 fear run?
 
+-----------
+
 New Vows:
 
 Naivety: Have access to less of your max magick this night.
