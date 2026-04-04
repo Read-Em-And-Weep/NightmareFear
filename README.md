@@ -4,10 +4,11 @@ Have you ever thought that the fear options in Hades are way to easy? That 67 is
 Welcome to Nightmare Fear, which offers 17 new vows for you to try and conquer. Can you manage a 134 fear run?
 
 New Vows:
+
 Naivety: Have access to less of your max magick this night.
-Simplicity: You may not run into Daedalus Hammers this night.
+Simplicity: You may not run into Daedalus Hammers this night. 
 Panic: You start locations with your magick empty, rather than full.
-Riposte: Enemies may dodge your attacks.
+Riposte: Enemies may dodge your attacks. 
 Eclipse: You may not run into Selene this night.
 Arrogance: The first hit you take in each location will deal more damage to you.
 Secrets: Chance that the reward preview on a room will be hidden from you.
