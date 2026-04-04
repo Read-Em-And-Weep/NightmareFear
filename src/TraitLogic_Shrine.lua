@@ -151,11 +151,7 @@ table.insert(NamedRequirementsData.LateHammerLootRequirements, {
 						})
 
 modutil.mod.Path.Wrap("RequiredNotInStore", function(base, source, args )
-    if args.Name == "WeaponUpgradeDrop" and RequiredShrineLevel({},{
-								ShrineUpgradeName = "NightmareFearHammerlessMetaUpgrade",
-								Comparison = ">=",
-								Value = 1,
-							}) then
+    if args.Name == "WeaponUpgradeDrop" and GetNumShrineUpgrades("NightmareFearHammerlessMetaUpgrade") >= 1 then
                                 return false
                             end
     return base(source, args)
@@ -163,23 +159,15 @@ end)
 
 -- Eclipse
 modutil.mod.Path.Wrap("RequiredNotInStore", function(base, source, args )
-    if args.Name == "SpellDrop" and RequiredShrineLevel({},{
-								ShrineUpgradeName = "NightmareFearEclipseMetaUpgrade",
-								Comparison = ">=",
-								Value = 1,
-							}) then
+    if args.Name == "SpellDrop" and GetNumShrineUpgrades("NightmareFearEclipseMetaUpgrade") >= 1 then
                                 return false
     end
-    if args.Name == "TalentDrop" and RequiredShrineLevel({},{
-								ShrineUpgradeName = "NightmareFearEclipseMetaUpgrade",
-								Comparison = ">=",
-								Value = 1,
-							}) then
+    if args.Name == "TalentDrop" and GetNumShrineUpgrades("NightmareFearEclipseMetaUpgrade") >= 1 then
                                 return false
     end
     return base(source, args)
 end)
-table.insert(NamedRequirementsData.SpellDropRequirements, {
+--[[table.insert(NamedRequirementsData.SpellDropRequirements, {
 							FunctionName = "RequiredShrineLevel",
 							FunctionArgs =
 							{
@@ -222,11 +210,14 @@ for i, data in ipairs(StoreData.SurfaceShop.GroupsOf) do
 						})
 		end
 	end	
-end
+end]]
 
 modutil.mod.Path.Wrap("StoreItemEligible", function(base, itemData, args)
 	itemData = itemData or {}
-	if itemData.Name == "SpellDrop" or itemData.Name == "TalentDrop" and GetNumShrineUpgrades("NightmareFearEclipseMetaUpgrade") >= 1 then
+	if (itemData.Name == "SpellDrop" or itemData.Name == "TalentDrop") and GetNumShrineUpgrades("NightmareFearEclipseMetaUpgrade") >= 1 then
+		return false
+	end
+	if itemData.Name == "WeaponUpgradeDrop"  and GetNumShrineUpgrades("NightmareFearHammerlessMetaUpgrade") >= 1 then
 		return false
 	end
 return base(itemData, args)
@@ -234,7 +225,10 @@ end)
 
 modutil.mod.Path.Wrap("IsGameStateEligible", function(base,source, requirements, args)
 	source = source or {}
-	if source.Name == "SpellDrop" or source.Name == "TalentDrop" and GetNumShrineUpgrades("NightmareFearEclipseMetaUpgrade") >= 1 then
+	if (source.Name == "SpellDrop" or source.Name == "TalentDrop") and GetNumShrineUpgrades("NightmareFearEclipseMetaUpgrade") >= 1 then
+		return false
+	end
+	if source.Name == "WeaponUpgradeDrop"  and GetNumShrineUpgrades("NightmareFearHammerlessMetaUpgrade") >= 1 then
 		return false
 	end
 	return base(source,requirements, args)
@@ -246,6 +240,9 @@ modutil.mod.Path.Wrap("FillInShopOptions", function(base,args)
 	if GetNumShrineUpgrades("NightmareFearEclipseMetaUpgrade") >= 1 then
 		table.insert(args.ExclusionNames, "SpellDrop")
 		table.insert(args.ExclusionNames, "TalentDrop")
+	end
+	if GetNumShrineUpgrades("NightmareFearHammerlessMetaUpgrade") >= 1 then
+		table.insert(args.ExclusionNames, "WeaponUpgradeDrop")
 	end
 	return base(args)
 end)
@@ -937,7 +934,7 @@ modutil.mod.Path.Wrap("Kill", function(base, victim, triggerArgs)
 			if GetNumShrineUpgrades("NightmareFearExpirationMetaUpgrade") >= 1 then
 				mod.ExpireExpiryBoons()
 			end
-			local delay = 2.5
+			local delay = 0
 			if GetNumShrineUpgrades("NightmareFearPurgingMetaUpgrade") >= 1 then
 				mod.OpenForcePurgeTraitMenu(delay, {})
 			end

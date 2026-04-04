@@ -6,6 +6,10 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+- Updated the purge function, so it should work slightly better
+- Updated how the hammer and Selene rewards are restricted to provide a more smooth experience
+- Updated Readme to explain compatibility
+- Added functionality for random fear Chaos Trials to contain these vows
 
 ## [1.0.1] - 2026-04-04
 

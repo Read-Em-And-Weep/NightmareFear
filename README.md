@@ -3,6 +3,8 @@ Have you ever thought that the fear options in Hades are way to easy? That 67 is
 
 Welcome to Nightmare Fear, which offers 17 new vows for you to try and conquer. Can you manage a 134 fear run?
 
+In-built compatibility with Zagreus Journey, Wrath of Olympus and Perfectionist. Random Chaos Bounties will also include these vows, so beware!
+
 -----------
 
 New Vows:
@@ -27,7 +29,7 @@ Rudiments: You lose access to elements and infusion boons this night.
 
 Taxes: Every time you enter a new location, lose money.
 
-Isolation: Any NPCs you encounter in your run (e.g. Arachne, Nemesis, Athena, etc.) will not appear this night.
+Isolation: Any NPCs you encounter in your run (e.g. Arachne, Nemesis, Athena, etc.) will not appear this night. This is compatible with the NPCs you run into in Zagreus Journey.
 
 Decay: The first Pom of Power in each biome will be an onion instead.
 
@@ -35,7 +37,7 @@ Expiry: Chance for boons to be expiring, meaning it will disappear after 2 guard
 
 Vanity: Your keepsakes will have less levels this night, if possible.
 
-Fealty: The max rarity of boons you encounter will be capped this night.
+Fealty: The max rarity of boons you encounter will be capped this night. This is compatible with both Perfectionist and Wrath of Olympus.
 
 Forsaking: Be offered fewer options whenever you claim a boon.
 

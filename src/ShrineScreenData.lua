@@ -94,7 +94,28 @@ mod.NewShrineUpgradeOrder = {
 }
 
 mod.CombinedShrineUpgradeOrder = {
-		"NightmareFearNoManaMetaUpgrade",
+	"EnemyDamageShrineUpgrade",
+	"EnemyHealthShrineUpgrade",
+	"EnemyShieldShrineUpgrade",
+	"EnemySpeedShrineUpgrade",
+
+	"EnemyCountShrineUpgrade",
+	"NextBiomeEnemyShrineUpgrade",
+	"EnemyRespawnShrineUpgrade",
+	"EnemyEliteShrineUpgrade",
+
+	"HealingReductionShrineUpgrade",
+	"ShopPricesShrineUpgrade",
+	"MinibossCountShrineUpgrade",
+	"BoonSkipShrineUpgrade",
+
+	"BiomeSpeedShrineUpgrade",
+	"LimitGraspShrineUpgrade",
+	"BoonManaReserveShrineUpgrade",
+	"BanUnpickedBoonsShrineUpgrade",
+
+	"BossDifficultyShrineUpgrade",
+	"NightmareFearNoManaMetaUpgrade",
 	"NightmareFearHammerlessMetaUpgrade",
 	"NightmareFearLowManaStartMetaUpgrade",
 	"NightmareFearEnemyDodgeMetaUpgrade",
@@ -117,6 +138,13 @@ mod.CombinedShrineUpgradeOrder = {
 "NightmareFearDevotionWeaponMetaUpgrade",
 
 }
+
+modutil.mod.Path.Wrap("StartPackagedBounty", function(base,screen, button)
+	game.ShrineUpgradeOrder = mod.CombinedShrineUpgradeOrder
+	base(screen, button)
+	game.ShrineUpgradeOrder = mod.OldShrineUpgradeOrder
+end)
+
 
 function mod.FlipShrineScreenToNew(screen, button)
     local idsToDestory = {}
