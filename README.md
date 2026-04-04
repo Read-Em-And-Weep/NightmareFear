@@ -5,8 +5,8 @@ Welcome to Nightmare Fear, which offers 17 new vows for you to try and conquer. 
 
 New Vows:
 
-Naivety: Have access to less of your max magick this night.
-Simplicity: You may not run into Daedalus Hammers this night. 
+Naivety: Have access to less of your max magick this night. \n
+Simplicity: You may not run into Daedalus Hammers this night. \n
 Panic: You start locations with your magick empty, rather than full.
 Riposte: Enemies may dodge your attacks. 
 Eclipse: You may not run into Selene this night.
