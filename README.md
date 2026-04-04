@@ -3,42 +3,44 @@ Have you ever thought that the fear options in Hades are way to easy? That 67 is
 
 Welcome to Nightmare Fear, which offers 17 new vows for you to try and conquer. Can you manage a 134 fear run?
 
+Additionally adds a new system after completing all Testaments where a randomly generated Testament, with a random boss, fear amount, weapon, and specific vow and rank will be offered to you before each run. Completing it will award you with 50 gemstones!
+
 In-built compatibility with Zagreus Journey, Wrath of Olympus and Perfectionist. Random Chaos Bounties will also include these vows, so beware!
 
 -----------
 
-New Vows:
+## New Vows:
 
-Naivety: Have access to less of your max magick this night.
+**Naivety**: Have access to less of your max magick this night.
 
-Simplicity: You may not run into Daedalus Hammers this night.
+**Simplicity**: You may not run into Daedalus Hammers this night.
 
-Panic: You start locations with your magick empty, rather than full.
+**Panic**: You start locations with your magick empty, rather than full.
 
-Riposte: Enemies may dodge your attacks. 
+**Riposte**: Enemies may dodge your attacks. 
 
-Eclipse: You may not run into Selene this night.
+**Eclipse**: You may not run into Selene this night.
 
-Arrogance: The first hit you take in each location will deal more damage to you.
+**Arrogance**: The first hit you take in each location will deal more damage to you.
 
-Secrets: Chance that the reward preview on a room will be hidden from you.
+**Secrets**: Chance that the reward preview on a room will be hidden from you.
 
-Purging: After defeating a guardian, you will be forced to purge a boon.
+**Purging**: After defeating a guardian, you will be forced to purge a boon.
 
-Rudiments: You lose access to elements and infusion boons this night.
+**Rudiments**: You lose access to elements and infusion boons this night.
 
-Taxes: Every time you enter a new location, lose money.
+**Taxes**: Every time you enter a new location, lose money.
 
-Isolation: Any NPCs you encounter in your run (e.g. Arachne, Nemesis, Athena, etc.) will not appear this night. This is compatible with the NPCs you run into in Zagreus Journey.
+**Isolation**: Any NPCs you encounter in your run (e.g. Arachne, Nemesis, Athena, etc.) will not appear this night. This is compatible with the NPCs you run into in Zagreus Journey.
 
-Decay: The first Pom of Power in each biome will be an onion instead.
+**Decay**: The first Pom of Power in each biome will be an onion instead.
 
-Expiry: Chance for boons to be expiring, meaning it will disappear after 2 guardians.
+**Expiry**: Chance for boons to be expiring, meaning it will disappear after 2 guardians.
 
-Vanity: Your keepsakes will have less levels this night, if possible.
+**Vanity**: Your keepsakes will have less levels this night, if possible.
 
-Fealty: The max rarity of boons you encounter will be capped this night. This is compatible with both Perfectionist and Wrath of Olympus.
+**Fealty**: The max rarity of boons you encounter will be capped this night. This is compatible with both Perfectionist and Wrath of Olympus.
 
-Forsaking: Be offered fewer options whenever you claim a boon.
+**Forsaking**: Be offered fewer options whenever you claim a boon.
 
-Betrayal: A god will betray you during guardian encounters, and you will have to face their devotion during that fight.
+**Betrayal**: A god will betray you during guardian encounters, and you will have to face their devotion during that fight.
