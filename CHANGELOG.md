@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- Fixed an issue where you could be killed by devotion weapons with the Vow of Betrayal while the results screen was open (betrayal never comes when you expect it)
+
 ## [1.2.1] - 2026-04-05
 
 - Expanded testament fear ranks, so they can spawn slightly higher now

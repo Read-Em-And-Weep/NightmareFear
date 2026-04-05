@@ -1267,48 +1267,24 @@ if ZagreusJourney then
 			end]]
 
 end
---[[function mod.SetUpBetrayalEncounters()
-	print("In the setup function")
-	local encounters = {BossHecate01 = 1, BossHecate02 = 1, BossScylla01 = 2, BossScylla02 = 2, BossInfestedCerberus01 = 3, BossInfestedCerberus02 = 3, BossChronos01 = 4, BossChronos02 = 4, BossPolyphemus01 = 1, BossPolyphemus02 = 1, BossEris01 = 2,BossEris02 = 2, BossPrometheus01 = 3,BossPrometheus02 = 3, BossTyphonHead01 = 4, BossTyphonHead02 = 4}
-	if ZagreusJourney then
-		encounters.BossHarpy1 = 1
-		encounters.BossHarpy2 = 1
-		encounters.BossHarpy3 = 1
-		encounters.BossHydra = 2
-		encounters.BossTheseusAndMinotaur = 3
-		encounters.BossHades = 4
-	end
-	for encounterName, shrineLevel in ipairs(encounters) do
-		if EncounterData and EncounterData[encounterName] then
-			if EncounterData[encounterName].UnthreadedEvents then
-				table.insert(EncounterData[encounterName].UnthreadedEvents,2, { FunctionName = _PLUGIN.guid..".SetUpBetrayalWeapon",GameStateRequirements =
-				{
-					{FunctionName = "RequiredShrineLevel",
-							FunctionArgs =
-							{
-								ShrineUpgradeName = "NightmareFearDevotionWeaponMetaUpgrade",
-								Comparison = ">=",
-								Value = shrineLevel,
-							},
-						}
-				}, Args = {} })
-				--[[mod.InsertBeforeInTable(EncounterData[encounterName].UnthreadedEvents, { FunctionName = "HandleEnemySpawns" }, { FunctionName = _PLUGIN.guid..".SetUpBetrayalWeapon",GameStateRequirements =
-				{
-					{FunctionName = "RequiredShrineLevel",
-							FunctionArgs =
-							{
-								ShrineUpgradeName = "NightmareFearDevotionWeaponMetaUpgrade",
-								Comparison = ">=",
-								Value = shrineLevel,
-							},
-						}
-				}, Args = {} })
+
+modutil.mod.Path.Wrap("OpenRunClearScreen", function(base)
+	CurrentRun = CurrentRun or {}
+	CurrentRun.CurrentRoom = CurrentRun.CurrentRoom or {}
+	CurrentRun.CurrentRoom.Encounter = CurrentRun.CurrentRoom.Encounter or {}
+	if CurrentRun.CurrentRoom.Encounter ~= nil then
+		if CurrentRun.CurrentRoom.Encounter.PassiveRoomWeapons then
+			for k, id in pairs(CurrentRun.CurrentRoom.Encounter.PassiveRoomWeapons) do
+				if ActiveEnemies[id] ~= nil then
+					CleanupEnemy(ActiveEnemies[id])
+				end
 			end
+			Destroy({ Ids = CurrentRun.CurrentRoom.Encounter.PassiveRoomWeapons })
 		end
 	end
-end]]
+	return base()
+end)
 
---mod.SetUpBetrayalEncounters()]]
 
 modutil.mod.Path.Wrap("SetTraitsOnLoot", function(base,lootData, args)
 	args = args or {}
