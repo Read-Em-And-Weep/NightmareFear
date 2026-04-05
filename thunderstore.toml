@@ -5,7 +5,7 @@ schemaVersion = "0.0.1"
 [package]
 namespace = "ReadEmAndWeep"
 name = "Nightmare_Fear"
-versionNumber = "1.2.1"
+versionNumber = "1.2.2"
 description = "Adds new vow options and fear to the Oath of the Unseen"
 websiteUrl = "https://github.com/Read-Em-And-Weep/NightmareFear"
 containsNsfwContent = false
