@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.2.0] - 2026-04-05
+
 - Updated testament system so that it requires a random collection of 1-4 vows at random ranks, as well as overall fear. Hopefully this should encourage you to try some combinations you haven't before!
 - Bounds on overall fear for testaments slightly altered
 
@@ -39,7 +41,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - First version of the mod!
 
-[unreleased]: https://github.com/Read-Em-And-Weep/NightmareFear/compare/1.1.1...HEAD
+[unreleased]: https://github.com/Read-Em-And-Weep/NightmareFear/compare/1.2.0...HEAD
+[1.2.0]: https://github.com/Read-Em-And-Weep/NightmareFear/compare/1.1.1...1.2.0
 [1.1.1]: https://github.com/Read-Em-And-Weep/NightmareFear/compare/1.1.0...1.1.1
 [1.1.0]: https://github.com/Read-Em-And-Weep/NightmareFear/compare/1.0.2...1.1.0
 [1.0.2]: https://github.com/Read-Em-And-Weep/NightmareFear/compare/1.0.1...1.0.2
