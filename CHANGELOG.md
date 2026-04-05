@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- Changed order that purging and expiry executed, so that it is more logically consistent
+
 ## [1.2.2] - 2026-04-05
 
 - Fixed an issue where you could be killed by devotion weapons with the Vow of Betrayal while the results screen was open (betrayal never comes when you expect it)
