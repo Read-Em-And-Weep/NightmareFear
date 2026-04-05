@@ -1112,8 +1112,7 @@ function mod.ExpireExpiryBoons()
 		RemoveTrait(CurrentRun.Hero, traitName)
 	end
 	if doInCombatText then
-		waitUnmodified( 0.5, "NightmareFearExpirationMetaUpgrade" )
-		thread( InCombatTextArgs, { TargetId = CurrentRun.Hero.ObjectId, Text = "NightmareFearExpirationMetaUpgrade_Active", Duration = 1.3, PreDelay = 0.2 } )
+		thread( InCombatTextArgs, { TargetId = CurrentRun.Hero.ObjectId, Text = "NightmareFearExpirationMetaUpgrade_Active", Duration = 1.3, PreDelay = 0.5 } )
 	end
 end
 

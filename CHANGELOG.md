@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 - Changed order that purging and expiry executed, so that it is more logically consistent
+- Changed wait for expiry boons to expire after defeating a guardian
 
 ## [1.2.2] - 2026-04-05
 
