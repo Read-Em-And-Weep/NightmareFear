@@ -832,11 +832,11 @@ modutil.mod.Path.Wrap("TraitTrayShowShrineUpgrades", function(base,screen, activ
 		wait( 0.02 )
 		SetHighlightedTraitFrame( screen, highlightedTrait )
 	end
-	if GameState.NightmareFearCurrentBounty and GetTotalSpentShrinePoints() >= GameState.NightmareFearCurrentBounty.TotalFear and CurrentRun.Hero.Weapons[GameState.NightmareFearCurrentBounty.Weapon] and GameState.ShrineUpgrades[GameState.NightmareFearCurrentBounty.Vow] and GameState.ShrineUpgrades[GameState.NightmareFearCurrentBounty.Vow] >= 1 and GameState.NightmareFearCurrentBounty.VowRank and GameState.ShrineUpgrades[GameState.NightmareFearCurrentBounty.Vow] >= GameState.NightmareFearCurrentBounty.VowRank and not GameState.NightmareFearCurrentBountyActive then
+	if GameState.NightmareFearCurrentBounty and mod.IsRandomBountyActive() and not GameState.NightmareFearCurrentBountyActive then
 		GameState.NightmareFearCurrentBountyActive = true
 	end
 	if GameState.NightmareFearCurrentBountyActive and GameState.NightmareFearCurrentBounty and ( CurrentRun.ActiveBounty == nil or CurrentHubRoom ~= nil ) then
-		if GetTotalSpentShrinePoints() >= GameState.NightmareFearCurrentBounty.TotalFear and CurrentRun.Hero.Weapons[GameState.NightmareFearCurrentBounty.Weapon] and GameState.ShrineUpgrades[GameState.NightmareFearCurrentBounty.Vow] and GameState.ShrineUpgrades[GameState.NightmareFearCurrentBounty.Vow] >= 1 and GameState.NightmareFearCurrentBounty.VowRank and GameState.ShrineUpgrades[GameState.NightmareFearCurrentBounty.Vow] >= GameState.NightmareFearCurrentBounty.VowRank then
+		if mod.IsRandomBountyActive() then
 	
 
 			SetAlpha({ Id = screen.Components.ActiveShrineBountyBacking.Id, Fraction = 1.0, Duration = 0.2 })
@@ -864,6 +864,49 @@ end)
 function mod.CreateRandomBounty()
 	GameState.NightmareFearCurrentBounty = {}
 	GameState.NightmareFearCurrentBountyActive = false
+	GameState.NightmareFearCurrentBountyClear = false
+	local vows = {"EnemyDamageShrineUpgrade",
+	"EnemyHealthShrineUpgrade",
+	"EnemyShieldShrineUpgrade",
+	"EnemySpeedShrineUpgrade",
+
+	"EnemyCountShrineUpgrade",
+	"NextBiomeEnemyShrineUpgrade",
+	"EnemyRespawnShrineUpgrade",
+	"EnemyEliteShrineUpgrade",
+
+	"HealingReductionShrineUpgrade",
+	"ShopPricesShrineUpgrade",
+	"MinibossCountShrineUpgrade",
+	"BoonSkipShrineUpgrade",
+
+	"BiomeSpeedShrineUpgrade",
+	"LimitGraspShrineUpgrade",
+	"BoonManaReserveShrineUpgrade",
+	"BanUnpickedBoonsShrineUpgrade",
+
+	"BossDifficultyShrineUpgrade",
+	"NightmareFearNoManaMetaUpgrade",
+	"NightmareFearHammerlessMetaUpgrade",
+	"NightmareFearLowManaStartMetaUpgrade",
+	"NightmareFearEnemyDodgeMetaUpgrade",
+
+	"NightmareFearEclipseMetaUpgrade",
+	"NightmareFearFirstHitMetaUpgrade",
+	"NightmareFearBlindRewardMetaUpgrade",
+	"NightmareFearPurgingMetaUpgrade",
+
+	"NightmareFearNoElementsMetaUpgrade",
+	"NightmareFearTaxMetaUpgrade",
+	"NightmareFearNoHelpMetaUpgrade",
+	"NightmareFearPomLevelsMetaUpgrade",
+	
+	"NightmareFearExpirationMetaUpgrade",
+	"NightmareFearKeepsakeLevelMetaUpgrade",
+	"NightmareFearLoweredRarityMetaUpgrade",
+	"NightmareFearLessChoicesMetaUpgrade",
+
+"NightmareFearDevotionWeaponMetaUpgrade",}
 	if not IsGameStateEligible({Name = "Unknown"}, {NamedRequirements = { "AllShrineBountiesCompleted" }},{}) then
 		return
 	end
@@ -874,11 +917,31 @@ function mod.CreateRandomBounty()
 		table.insert(bossEncounters, "ModsNikkelMHadesBiomesTheseusAndMinotaurEncounters")
 		table.insert(bossEncounters, "ModsNikkelMHadesBiomesHadesEncounters")
 	end
+	local numVows = GetRandomValue({1, 2, 2, 2, 3, 3, 3, 4})
 	local encounterChosen = GetRandomValue(bossEncounters)
-	local vowChosen = GetRandomValue(mod.CombinedShrineUpgradeOrder)
-	local vowData = game.MetaUpgradeData[vowChosen]
+	local vowsChosen = {}
+	for i = 1, numVows, 1 do
+		local vowChosen = RemoveRandomValue(vows)
+		local levelChosen = mod.ChoseRandomVowLevel(vowChosen, encounterChosen)
+		table.insert(vowsChosen, {vowChosen, levelChosen})
+	end
+	local totalFear = RandomInt(8, 35)
+	local weaponChosen = GetRandomValue({"WeaponStaffSwing", "WeaponDagger", "WeaponAxe","WeaponTorch","WeaponLob","WeaponSuit"})
+	GameState.NightmareFearCurrentBounty = {
+		BossEncounterChosen = encounterChosen,
+		TotalFear = totalFear,
+		Vows = vowsChosen,
+		--Vow = {},--vowChosen,
+		--VowRank = 1, --levelChosen,
+		Weapon = weaponChosen
+	}
+end
+
+function mod.ChoseRandomVowLevel(vow, encounterChosen)
+	encounterChosen = encounterChosen or {}
+	local vowData = game.MetaUpgradeData[vow]
 	local levelChosen = RandomInt(1, #(vowData.Ranks))
-	if vowChosen == "NightmareFearDevotionWeaponMetaUpgrade" or vowChosen == "BossDifficultyShrineUpgrade" then
+	if vow == "NightmareFearDevotionWeaponMetaUpgrade" or vow == "BossDifficultyShrineUpgrade" then
 		if Contains({"HecateEncounters","PolyphemusEncounters",  "ModsNikkelMHadesBiomesMegaeraEncounters"}, encounterChosen) then
 			levelChosen = math.max(1, levelChosen)
 		elseif Contains({"ScyllaEncounters","ErisEncounters",  "ModsNikkelMHadesBiomesHydraEncounters"}, encounterChosen) then
@@ -889,15 +952,76 @@ function mod.CreateRandomBounty()
 			levelChosen = math.max(4, levelChosen)
 		end
 	end
-	local totalFear = RandomInt(12, 35)
-	local weaponChosen = GetRandomValue({"WeaponStaffSwing", "WeaponDagger", "WeaponAxe","WeaponTorch","WeaponLob","WeaponSuit"})
-	GameState.NightmareFearCurrentBounty = {
-		BossEncounterChosen = encounterChosen,
-		TotalFear = totalFear,
-		Vow = vowChosen,
-		VowRank = levelChosen,
-		Weapon = weaponChosen
-	}
+	return levelChosen
+end
+
+function mod.GetVowPositionAndScale(screen, totalVows, currentVow)
+	local vowItem = {}
+	local vowLevelItem = {}
+	local vowItemXPositionArray = {screen.BountyRowStartX, screen.BountyRowStartX + 2* screen.BountyRowSpacingX *3/4 }
+	local vowLevelItemXPositionArray = {screen.BountyRowStartX + screen.BountyRowSpacingX *3/4, screen.BountyRowStartX + 3* screen.BountyRowSpacingX *3/4 }
+	if totalVows == 1 then
+		vowItem = {X =screen.BountyRowStartX + screen.BountyRowSpacingX/2, Y =screen.BountyRowStartY + screen.BountyRowSpacingY, Scale = 0.5}
+		vowLevelItem = {X = screen.BountyRowStartX + 3 * screen.BountyRowSpacingX/2, Y = screen.BountyRowStartY + screen.BountyRowSpacingY, FontSize = 12*3.5}
+	elseif totalVows == 2 then
+		vowItem = {Y = screen.BountyRowStartY + screen.BountyRowSpacingY, Scale = 0.5}
+		vowLevelItem = {Y = screen.BountyRowStartY + screen.BountyRowSpacingY, FontSize = 12*3.5}
+		vowItem.X = vowItemXPositionArray[currentVow]
+		vowLevelItem.X = vowLevelItemXPositionArray[currentVow]
+	elseif totalVows == 3 then
+		if currentVow == 3 then
+			vowItem = {X =screen.BountyRowStartX + screen.BountyRowSpacingX/2, Y =screen.BountyRowStartY +0.5 *screen.BountyRowSpacingY + screen.BountyRowSpacingY*2/3}
+		vowLevelItem = {X = screen.BountyRowStartX + 3 * screen.BountyRowSpacingX/2, Y = screen.BountyRowStartY +0.5 *screen.BountyRowSpacingY + screen.BountyRowSpacingY*2/3}
+		else
+		vowItem = {X =screen.BountyRowStartX + screen.BountyRowSpacingX/2, Y =screen.BountyRowStartY +0.5 *screen.BountyRowSpacingY + screen.BountyRowSpacingY*1/3}
+		vowLevelItem = {X = screen.BountyRowStartX + 3 * screen.BountyRowSpacingX/2, Y = screen.BountyRowStartY +0.5 *screen.BountyRowSpacingY + screen.BountyRowSpacingY*1/3}
+		vowItem.X = vowItemXPositionArray[currentVow]
+		vowLevelItem.X = vowLevelItemXPositionArray[currentVow]
+		end
+		vowItem.Scale = 0.38
+		vowLevelItem.FontSize = 12*3.5
+	elseif totalVows == 4 then
+		if currentVow == 1 or currentVow == 3 then
+		vowItem.X = vowItemXPositionArray[1]
+		vowLevelItem.X = vowLevelItemXPositionArray[1]
+		else
+			vowItem.X = vowItemXPositionArray[2]
+		vowLevelItem.X = vowLevelItemXPositionArray[2]
+		end
+		if currentVow == 1 or currentVow == 2 then
+			vowItem.Y = screen.BountyRowStartY + 0.5 *screen.BountyRowSpacingY + screen.BountyRowSpacingY*1/3
+			vowLevelItem.Y = screen.BountyRowStartY + 0.5 *screen.BountyRowSpacingY +screen.BountyRowSpacingY*1/3
+		else
+			vowItem.Y = screen.BountyRowStartY + 0.5 * screen.BountyRowSpacingY +screen.BountyRowSpacingY*2/3
+			vowLevelItem.Y = screen.BountyRowStartY +0.5 *screen.BountyRowSpacingY + screen.BountyRowSpacingY*2/3
+		end
+				vowItem.Scale = 0.38
+		vowLevelItem.FontSize = 12*3.5
+	end
+	return {VowItem = vowItem, VowLevelItem = vowLevelItem}
+end
+
+function mod.IsRandomBountyActive()
+	if GameState.NightmareFearCurrentBounty and GameState.NightmareFearCurrentBounty.TotalFear and GetTotalSpentShrinePoints() >= GameState.NightmareFearCurrentBounty.TotalFear and CurrentRun.Hero.Weapons[GameState.NightmareFearCurrentBounty.Weapon] then
+		local vowsActive = true
+		for k,v in ipairs(GameState.NightmareFearCurrentBounty.Vows) do
+			if v[1] and GameState.ShrineUpgrades[v[1]] and v[2] and GameState.ShrineUpgrades[v[1]] >= v[2] then
+			else
+				vowsActive = false
+			end
+		end
+		if vowsActive and not GameState.NightmareFearCurrentBountyClear then
+			GameState.NightmareFearCurrentBountyActive = true
+			return true
+		else
+			GameState.NightmareFearCurrentBountyActive = false
+			return false
+		end
+	else
+		GameState.NightmareFearCurrentBountyActive = false
+		return false
+	end
+
 end
 
 function mod.CreateRandomBountyCard(screen)
@@ -909,6 +1033,10 @@ function mod.CreateRandomBountyCard(screen)
 	if not GameState.NightmareFearCurrentBounty then
 		mod.CreateRandomBounty()
 	end
+	if not GameState.NightmareFearCurrentBounty.Vows then
+		mod.CreateRandomBounty()
+	end
+	local numVows = #(GameState.NightmareFearCurrentBounty.Vows)
 	local components = screen.Components
 	local itemLocationX = screen.BountyRowStartX + screen.BountyRowSpacingX
 	local itemLocationY = screen.BountyRowStartY
@@ -966,29 +1094,35 @@ function mod.CreateRandomBountyCard(screen)
 		Scale = screen.BountyWeaponIconScale
 	})
 	components[key .. "Weapon"] = weaponItem
+
+	for i = 1, numVows, 1 do
+		local vowKey = key..i
+	
+		local vowPositionData = mod.GetVowPositionAndScale(screen, numVows, i)
+
 	local vowItem = CreateScreenComponent({
 		Name = "BlankObstacle",
 		Group = screen.ComponentData.DefaultGroup,
-		X = screen.BountyRowStartX + screen.BountyRowSpacingX/2,
-		Y = screen.BountyRowStartY + screen.BountyRowSpacingY,
-		Animation = MetaUpgradeData[GameState.NightmareFearCurrentBounty.Vow].Icon,
-		Scale = 1,
+		X = vowPositionData.VowItem.X,
+		Y = vowPositionData.VowItem.Y,
+		Animation = MetaUpgradeData[GameState.NightmareFearCurrentBounty.Vows[i][1]].Icon,
+		Scale = vowPositionData.VowItem.Scale,
 	})
-	components[key .. "Vow"] = vowItem
+	components[vowKey .. "Vow"] = vowItem
 	local vowLevelItem = CreateScreenComponent({
 		Name = "BlankObstacle",
 		Group = screen.ComponentData.DefaultGroup,
-		X = screen.BountyRowStartX + 3 * screen.BountyRowSpacingX/2,
-		Y = screen.BountyRowStartY + screen.BountyRowSpacingY
+		X = vowPositionData.VowLevelItem.X,
+		Y = vowPositionData.VowLevelItem.Y
 	})
-	components[key .. "VowRank"] = vowLevelItem
+	components[vowKey .. "VowRank"] = vowLevelItem
 	local bountyVowRanksFormat = ShallowCopyTable(screen.BountyShrinePointsFormat)
 	
-	bountyVowRanksFormat.FontSize = 24*3.5
+	bountyVowRanksFormat.FontSize = vowPositionData.VowLevelItem.FontSize
 	bountyVowRanksFormat.Font = "NumericP22UndergroundSCHeavy"
 	bountyVowRanksFormat.Id = vowLevelItem.Id
 	bountyVowRanksFormat.Text = "NewTraitUnlocked_Subtitle"
-	local requiredRank = GameState.NightmareFearCurrentBounty.VowRank
+	local requiredRank = GameState.NightmareFearCurrentBounty.Vows[i][2]
 	local romanNumerals = {"I", "II", "III", "IV"}
 	if requiredRank == 1 then
 		bountyVowRanksFormat.Color = Color.BoonPatchCommon
@@ -1013,6 +1147,8 @@ function mod.CreateRandomBountyCard(screen)
 	bountyVowRanksFormat.LuaKey = "TempTextData"
 	bountyVowRanksFormat.LuaValue = { Gift = text }
 	CreateTextBox(bountyVowRanksFormat)
+
+	end
 	GameState.NightmareFearCreatedBountyCard = true
 	ShrineScreenUpdateItems( screen )
 	ShrineScreenUpdateActivePoints( screen, nil, { Duration = 0.0 } )
@@ -1027,8 +1163,6 @@ args = args or {}
 		local vowActive = false
 		local weaponItem = screen.Components[key.."Weapon"]
 		local backing = screen.Components[key.."Backing"]
-		local vowItem = screen.Components[key .. "Vow"]
-		local vowLevelItem = screen.Components[key .. "VowRank"]
 		local targetItem = screen.Components[key.."Target"]
 		local matchedWeapon = false
 		local matchedVow = false
@@ -1036,12 +1170,18 @@ args = args or {}
 		if CurrentRun.Hero.Weapons[GameState.NightmareFearCurrentBounty.Weapon] then
 			matchedWeapon = true
 		end
-		if GameState.ShrineUpgrades[GameState.NightmareFearCurrentBounty.Vow] and GameState.ShrineUpgrades[GameState.NightmareFearCurrentBounty.Vow] >= 1 then
-			matchedVow = true
+		local numVows = #(GameState.NightmareFearCurrentBounty.Vows) or 1
+		for i = 1, numVows, 1 do
+		local vowKey = key..i
+		local vowItem = screen.Components[vowKey .. "Vow"]
+		local vowLevelItem = screen.Components[vowKey .. "VowRank"]
+
+		if GameState.NightmareFearCurrentBounty.Vows and GameState.NightmareFearCurrentBounty.Vows[i] and GameState.NightmareFearCurrentBounty.Vows[i][1] and GameState.ShrineUpgrades[GameState.NightmareFearCurrentBounty.Vows[i][1]] and GameState.ShrineUpgrades[GameState.NightmareFearCurrentBounty.Vows[i][1]] >= 1 then
 			SetColor({ Id = vowItem.Id, Color = screen.BountyActiveColor, Duration = args.Duration or 0.3 })
-			if GameState.ShrineUpgrades[GameState.NightmareFearCurrentBounty.Vow] >= GameState.NightmareFearCurrentBounty.VowRank then
-				matchedRank = true
-				ModifyTextBox({ Id = vowLevelItem.Id, ColorTarget = screen.BountyActiveColor })
+			if GameState.NightmareFearCurrentBounty.Vows[i][2] and GameState.ShrineUpgrades[GameState.NightmareFearCurrentBounty.Vows[i][1]] >= GameState.NightmareFearCurrentBounty.Vows[i][2] then
+				local colors = {Color.BoonPatchCommon, Color.BoonPatchRare, Color.BoonPatchEpic, Color.BoonPatchHeroic}
+				local value = GameState.NightmareFearCurrentBounty.Vows[i][2] or 1
+				ModifyTextBox({ Id = vowLevelItem.Id, ColorTarget = colors[value] })
 			else
 				ModifyTextBox({ Id = vowLevelItem.Id, ColorTarget = screen.BountyInactiveColor })
 			end
@@ -1049,12 +1189,13 @@ args = args or {}
 			SetColor({ Id = vowItem.Id, Color = screen.BountyInactiveColor, Duration = args.Duration or 0.3 })
 			ModifyTextBox({ Id = vowLevelItem.Id, ColorTarget = screen.BountyInactiveColor })
 		end	
+	end
 		if matchedWeapon then
 			SetColor({ Id = weaponItem.Id, Color = screen.BountyActiveColor, Duration = args.Duration or 0.3 })
 		else
 			SetColor({ Id = weaponItem.Id, Color = screen.BountyInactiveColor, Duration = args.Duration or 0.3 })
 		end
-		if activeShrinePoints >= GameState.NightmareFearCurrentBounty.TotalFear and matchedWeapon and matchedVow and matchedRank then
+		if activeShrinePoints >= GameState.NightmareFearCurrentBounty.TotalFear and mod.IsRandomBountyActive() then
 			SetColor({ Id = targetItem.Id, Color = screen.BountyActiveColor, Duration = args.Duration or 0.3 })
 			SetAnimation({ DestinationId = backing.Id, Name = "ShrineTestamentActiveTarget" })
 			if not GameState.NightmareFearCurrentBountyActive then
@@ -1072,7 +1213,7 @@ end)
 
 modutil.mod.Path.Wrap("UpdateShrineAnimation", function(base,activeBounty)
 	local shrineId = 589694
-	if GameState.NightmareFearCurrentBountyActive then
+	if mod.IsRandomBountyActive() and GameState.NightmareFearCurrentBountyActive then
 		return SetAnimation({ DestinationId = shrineId, Name = "Crossroads_Shrine_On01_Active" }) -- nopkg
 	else
 	return base(activeBounty)
@@ -1081,14 +1222,21 @@ end)
 
 modutil.mod.Path.Wrap("CloseShrineUpgradeScreen", function(base,screen,button)
 	base(screen,button)
-	if GameState.NightmareFearCurrentBountyActive then
+	if mod.IsRandomBountyActive() and GameState.NightmareFearCurrentBountyActive then
 		thread( BountyReadyConfirmPresentation, screen, button )
+	end
+end)
+
+modutil.mod.Path.Wrap("DoPatches", function(base)
+	base()
+	if GameState and GameState.NightmareFearCurrentBounty and not GameState.NightmareFearCurrentBounty.Vows then
+		mod.CreateRandomBounty()
 	end
 end)
 
 modutil.mod.Path.Wrap("CheckShrineBounties", function(base)
 	if GameState.NightmareFearCurrentBountyActive and GameState.NightmareFearCurrentBounty then
-		if Contains(BountyData[GameState.NightmareFearCurrentBounty.BossEncounterChosen].Encounters, CurrentRun.CurrentRoom.Encounter.Name) and GetTotalSpentShrinePoints() >= GameState.NightmareFearCurrentBounty.TotalFear and GameState.ShrineUpgrades[GameState.NightmareFearCurrentBounty.Vow] and GameState.ShrineUpgrades[GameState.NightmareFearCurrentBounty.Vow] >= GameState.NightmareFearCurrentBounty.VowRank then
+		if Contains(BountyData[GameState.NightmareFearCurrentBounty.BossEncounterChosen].Encounters, CurrentRun.CurrentRoom.Encounter.Name) and mod.IsRandomBountyActive() then
 			wait(0.5, RoomThreadName)
 			thread(ShrineBountyEarnedPresentation,
 				{ TitleText = "ShrineBountyCompleteMessage", SubtitleText = "ShrineBountyCompleteSubtitle" })
@@ -1111,6 +1259,7 @@ modutil.mod.Path.Wrap("CheckShrineBounties", function(base)
 			thread(CheckQuestStatus)
 			wait(0.5, RoomThreadName)
 			GameState.NightmareFearCurrentBountyActive = false
+			GameState.NightmareFearCurrentBountyClear = true
 			GameState.NightmareFearCurrentBounty = {}
 		end
 	else
@@ -1120,7 +1269,7 @@ end)
 
 modutil.mod.Path.Wrap("EquipPlayerWeapon", function(base,weaponData, args)
 	base(weaponData, args)
-	if GameState.NightmareFearCurrentBounty and GetTotalSpentShrinePoints() >= GameState.NightmareFearCurrentBounty.TotalFear and CurrentRun.Hero.Weapons[GameState.NightmareFearCurrentBounty.Weapon] and GameState.ShrineUpgrades[GameState.NightmareFearCurrentBounty.Vow] and GameState.ShrineUpgrades[GameState.NightmareFearCurrentBounty.Vow] >= 1 and GameState.NightmareFearCurrentBounty.VowRank and GameState.ShrineUpgrades[GameState.NightmareFearCurrentBounty.Vow] >= GameState.NightmareFearCurrentBounty.VowRank then
+	if GameState.NightmareFearCurrentBounty and mod.IsRandomBountyActive() then
 		GameState.NightmareFearCurrentBountyActive = true
 	else
 		GameState.NightmareFearCurrentBountyActive = false
@@ -1130,6 +1279,7 @@ end)
 modutil.mod.Path.Wrap("KillHero", function(base, victim, triggerArgs)
 	GameState.NightmareFearCurrentBounty = nil
 	GameState.NightmareFearCurrentBountyActive = false
+	GameState.NightmareFearCurrentBountyClear = false
 	mod.CreateRandomBounty()
 	return base(victim, triggerArgs)
 end)

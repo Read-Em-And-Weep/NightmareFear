@@ -7,6 +7,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- Updated testament system so that it requires a random collection of 1-4 vows at random ranks, as well as overall fear. Hopefully this should encourage you to try some combinations you haven't before!
+- Bounds on overall fear for testaments slightly altered
+
 ## [1.1.1] - 2026-04-05
 
 - Fixed an issue that resulted in you also receiving less major finds while using the Vow of Naivety
