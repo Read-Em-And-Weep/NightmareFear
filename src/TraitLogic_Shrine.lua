@@ -114,7 +114,7 @@ end)
 	return base(run, room, rewardStoreName, previouslyChosenRewards, args)
 end)]]
 
-modutil.mod.Path.Wrap("ChooseNextRewardStore", function(base, run)
+--[[modutil.mod.Path.Wrap("ChooseNextRewardStore", function(base, run)
 	if GetNumShrineUpgrades("NightmareFearNoManaMetaUpgrade") >= 1 then
 		if RandomChance(GetNumShrineUpgrades("NightmareFearNoManaMetaUpgrade") * 0.25) then
 			RandomSynchronize()
@@ -128,7 +128,7 @@ modutil.mod.Path.Wrap("ChooseNextRewardStore", function(base, run)
 		end
 	end
 	return base(run)
-end)
+end)]]
 
 -- Simplicity
 table.insert(NamedRequirementsData.HammerLootRequirements, {

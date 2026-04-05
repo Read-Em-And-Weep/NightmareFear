@@ -889,7 +889,7 @@ function mod.CreateRandomBounty()
 			levelChosen = math.max(4, levelChosen)
 		end
 	end
-	local totalFear = RandomInt(19, 35)
+	local totalFear = RandomInt(12, 35)
 	local weaponChosen = GetRandomValue({"WeaponStaffSwing", "WeaponDagger", "WeaponAxe","WeaponTorch","WeaponLob","WeaponSuit"})
 	GameState.NightmareFearCurrentBounty = {
 		BossEncounterChosen = encounterChosen,
