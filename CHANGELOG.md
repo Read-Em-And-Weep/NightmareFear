@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.2.4] - 2026-04-06
+
 - Updated hotkey for changing page for controller compatibility
 
 ## [1.2.3] - 2026-04-05
@@ -56,7 +58,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - First version of the mod!
 
-[unreleased]: https://github.com/Read-Em-And-Weep/NightmareFear/compare/1.2.3...HEAD
+[unreleased]: https://github.com/Read-Em-And-Weep/NightmareFear/compare/1.2.4...HEAD
+[1.2.4]: https://github.com/Read-Em-And-Weep/NightmareFear/compare/1.2.3...1.2.4
 [1.2.3]: https://github.com/Read-Em-And-Weep/NightmareFear/compare/1.2.2...1.2.3
 [1.2.2]: https://github.com/Read-Em-And-Weep/NightmareFear/compare/1.2.1...1.2.2
 [1.2.1]: https://github.com/Read-Em-And-Weep/NightmareFear/compare/1.2.0...1.2.1
