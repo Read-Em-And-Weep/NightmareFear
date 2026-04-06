@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- Updated hotkey for changing page for controller compatibility
+
 ## [1.2.3] - 2026-04-05
 
 - Changed order that purging and expiry executed, so that it is more logically consistent

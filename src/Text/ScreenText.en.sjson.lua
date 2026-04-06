@@ -9,7 +9,7 @@ local newScreenTextOrder =
 local newScreenTextData = {
       {
       Id = "NightmareFearShrineScreen_NextPage",
-      DisplayName = "{CF} NEXT PAGE",
+      DisplayName = "{RR} NEXT PAGE",
     },
 }
 

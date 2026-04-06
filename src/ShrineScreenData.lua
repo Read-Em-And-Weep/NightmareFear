@@ -13,7 +13,7 @@ game.ScreenData.Shrine.ComponentData.NightmareFearArrowKey = {
 				OnMouseOffFunctionName = _PLUGIN.guid..".ShrineArrowMouseOffItem",
 				OnPressedFunctionName = _PLUGIN.guid..".FlipShrineScreen",
 				Sound = "/SFX/Menu Sounds/GodBoonInteract",
-				ControlHotkeys = { "Confirm", },
+				ControlHotkeys = { "Reroll", },
 			},
 		}
 game.ScreenData.Shrine.ComponentData.ActionBarRight.Children.NightmareFearArrowKeyEnter = {
@@ -28,7 +28,7 @@ game.ScreenData.Shrine.ComponentData.ActionBarRight.Children.NightmareFearArrowK
 						OnMouseOverFunctionName = "MouseOverContextualAction",
 						OnMouseOffFunctionName = "MouseOffContextualAction",
 						OnPressedFunctionName = _PLUGIN.guid..".FlipShrineScreen",
-						ControlHotkeys = { "Confirm", },
+						ControlHotkeys = { "Reroll", },
 					},
 					Text = "NightmareFearShrineScreen_NextPage",
 					TextArgs = UIData.ContextualButtonFormatRight,
