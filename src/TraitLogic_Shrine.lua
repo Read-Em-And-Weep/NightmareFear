@@ -381,122 +381,18 @@ end
 
 -- Secrets
 modutil.mod.Path.Wrap("CreateDoorRewardPreview", function(base,exitDoor, chosenRewardType, chosenLootName, index, args)
-	if GetNumShrineUpgrades( "NightmareFearBlindRewardMetaUpgrade" ) >= 1 then
-		local shrineLevel = GetNumShrineUpgrades( "NightmareFearBlindRewardMetaUpgrade" )
-		if RandomChance(shrineLevel * 0.25) then
-			local room = exitDoor.Room
+    if GetNumShrineUpgrades( "NightmareFearBlindRewardMetaUpgrade" ) >= 1 then
+        local shrineLevel = GetNumShrineUpgrades( "NightmareFearBlindRewardMetaUpgrade" )
+        if RandomChance(shrineLevel * 0.25) then
+            exitDoor.Room.RewardPreviewOverride = "ChaosPreview"
+            args = args or {}
+            args.SkipRoomSubIcons = true
+        end
+    end
 
-	args = args or {}
-
-	if exitDoor.HideRewardPreview or room.HideRewardPreview then
-		return
-	end
-
-	if not args.SkipCageRewards and room.CageRewards ~= nil and chosenRewardType == nil then
-		for index, cageReward in ipairs( room.CageRewards ) do
-			CreateDoorRewardPreview( exitDoor, cageReward.RewardType, cageReward.ForceLootName, index, { SkipCageRewards = true, SkipRoomSubIcons = (index < #room.CageRewards) } )
-		end
-		return
-	end
-
-	chosenRewardType = chosenRewardType or room.ChosenRewardType
-	chosenLootName = chosenLootName or room.ForceLootName
-
-	local doorIconOffsetX = exitDoor.RewardPreviewOffsetX or 0
-	local doorIconOffsetY = exitDoor.RewardPreviewOffsetY or 0
-	local doorIconOffsetZ = exitDoor.RewardPreviewOffsetZ or 130
-
-	local doorIconIsometricShiftX = -6
-	local doorIconIsometricShiftZ = -3
-
-	index = index or 1
-
-	doorIconOffsetZ = doorIconOffsetZ + ((index - 1) * 180)
-	
-	if IsHorizontallyFlipped({ Id = exitDoor.ObjectId }) then
-		doorIconOffsetX = doorIconOffsetX * -1
-		doorIconIsometricShiftX = doorIconIsometricShiftX * -1
-	end
-	exitDoor.AdditionalIcons = exitDoor.AdditionalIcons or {}
-
-	exitDoor.RewardPreviewBackingIds = exitDoor.RewardPreviewBackingIds or {}
-	local backingId = nil
-	if args.ReUseIds then
-		backingId = exitDoor.RewardPreviewBackingIds[index]
-	else
-		backingId = SpawnObstacle({ Name = "BlankGeoObstacle", Group = "Combat_UI_World", SortById = true, })
-		table.insert( exitDoor.RewardPreviewBackingIds, backingId )
-		SetAlpha({ Id = backingId, Fraction = 0.0, Duration = 0.0 })
-		SetAlpha({ Id = backingId, Fraction = 1.0, Duration = 0.1 })
-		Attach({ Id = backingId, DestinationId = exitDoor.ObjectId, OffsetZ = doorIconOffsetZ, OffsetY = doorIconOffsetY, OffsetX = doorIconOffsetX })
-	end
-	if (exitDoor.RewardStoreName or exitDoor.Room.RewardStoreName) == "MetaProgress" then
-		SetAnimation({ Name = "RoomRewardAvailable_Back_Meta", DestinationId = backingId })
-	else
-		SetAnimation({ Name = "RoomRewardAvailable_Back_Run", DestinationId = backingId })
-	end
-
-	exitDoor.RewardPreviewIconIds = exitDoor.RewardPreviewIconIds or {}
-	local doorIconId = nil
-	if args.ReUseIds then
-		doorIconId = exitDoor.RewardPreviewIconIds[index]
-	else
-		doorIconId = SpawnObstacle({ Name = "RoomRewardPreview", Group = "Combat_UI", DestinationId = exitDoor.ObjectId, SortById = true,
-			OffsetY = doorIconOffsetY, OffsetX = doorIconOffsetX + doorIconIsometricShiftX, OffsetZ = doorIconOffsetZ + doorIconIsometricShiftZ })
-		SetAlpha({ Id = doorIconId, Fraction = 0.0, Duration = 0.0 })
-		SetAlpha({ Id = doorIconId, Fraction = 1.0, Duration = 0.1 })
-		table.insert( exitDoor.RewardPreviewIconIds, doorIconId )
-	end
-
-	local rewardHidden = false
-	if room.RewardPreviewOverride ~= nil then
-		exitDoor.RewardPreviewAnimName = room.RewardPreviewOverride
-		SetAnimation({ DestinationId = doorIconId, Name = exitDoor.RewardPreviewAnimName })
-	elseif room.NextRoomSet then
-		exitDoor.RewardPreviewAnimName = room.ExitPreviewAnim or "ExitPreview"
-		SetAnimation({ DestinationId = doorIconId, Name = exitDoor.RewardPreviewAnimName })
-	else
-		exitDoor.RewardPreviewAnimName = "ChaosPreview"
-		SetAnimation({ DestinationId = doorIconId, Name = exitDoor.RewardPreviewAnimName })
-		rewardHidden = true
-	end
-		if RoomData[CurrentRun.CurrentRoom.Name].UseDefaultRewardPreview and exitDoor.DefaultRewardPreviewOverride ~= nil then
-		exitDoor.RewardPreviewAnimName = exitDoor.DefaultRewardPreviewOverride
-		exitDoor.Room.RewardPreviewIcon = nil
-		SetAnimation({ DestinationId = doorIconId, Name = exitDoor.RewardPreviewAnimName })
-	end
-
-	if exitDoor.RewardPreviewAnimName ~= nil then
-		MapState.OfferedRewardPreviewTypes[exitDoor.RewardPreviewAnimName] = true
-	end
-
-	local subIcons = PopulateDoorRewardPreviewSubIcons( exitDoor, { ChosenRewardType = chosenRewardType, RewardHidden = rewardHidden, SkipRoomSubIcons = args.SkipRoomSubIcons, CageRewards = room.CageRewards } )
-	local doorIconIndexForSubIcons = 1
-	if room.CageRewards ~= nil then
-		doorIconIndexForSubIcons = #room.CageRewards
-	end
-	local iconSpacing = 60
-	local numSubIcons = #subIcons
-	local isoOffset = iconSpacing * -0.5 * (numSubIcons - 1)
-	for i, iconData in ipairs( subIcons ) do
-		AddDoorInfoIcon({ Door = exitDoor, DoorIconId = exitDoor.RewardPreviewIconIds[doorIconIndexForSubIcons], Group = "Combat_UI_World", IsoOffset = isoOffset, Name = iconData.Name, Animation = iconData.Animation or iconData.Name, ReUseIds = args.ReUseIds })
-		isoOffset = isoOffset + iconSpacing
-	end
-
-	if not args.ReUseIds and IsHorizontallyFlipped({ Id = exitDoor.ObjectId }) then
-		local ids = { doorIconId, backingId }
-		FlipHorizontal({ Ids = ids })
-	end
-
-	PlaySound({ Id = exitDoor.ObjectId, Name = "/Leftovers/SFX/DoorStateChangeRewardAppearance" })
-
-		else
-			return base(exitDoor, chosenRewardType, chosenLootName, index, args)
-		end
-	else
-	return base(exitDoor, chosenRewardType, chosenLootName, index, args)
-	end
+    return base(exitDoor, chosenRewardType, chosenLootName, index, args)
 end)
+
 
 -- Vanity
 modutil.mod.Path.Wrap("GetKeepsakeLevel", function(base, traitName, unmodified)

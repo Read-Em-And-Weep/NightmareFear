@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- Updated how Secrets is handled, for future compatibility with Zagreus Journey (thanks NikkelM!) 
+
 ## [1.2.4] - 2026-04-06
 
 - Updated hotkey for changing page for controller compatibility
