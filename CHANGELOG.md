@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.2.5] - 2026-04-07
+
 - Updated how Secrets is handled, for future compatibility with Zagreus Journey (thanks NikkelM!) 
 
 ## [1.2.4] - 2026-04-06
@@ -60,7 +62,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - First version of the mod!
 
-[unreleased]: https://github.com/Read-Em-And-Weep/NightmareFear/compare/1.2.4...HEAD
+[unreleased]: https://github.com/Read-Em-And-Weep/NightmareFear/compare/1.2.5...HEAD
+[1.2.5]: https://github.com/Read-Em-And-Weep/NightmareFear/compare/1.2.4...1.2.5
 [1.2.4]: https://github.com/Read-Em-And-Weep/NightmareFear/compare/1.2.3...1.2.4
 [1.2.3]: https://github.com/Read-Em-And-Weep/NightmareFear/compare/1.2.2...1.2.3
 [1.2.2]: https://github.com/Read-Em-And-Weep/NightmareFear/compare/1.2.1...1.2.2
