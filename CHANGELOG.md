@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.2.6] - 2026-04-15
+
 - Updated to work in the newest Post-Release Patch 2!
 - Updated a weird interaction in creating the testament screen where it could index nil in a table
 
@@ -65,7 +67,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - First version of the mod!
 
-[unreleased]: https://github.com/Read-Em-And-Weep/NightmareFear/compare/1.2.5...HEAD
+[unreleased]: https://github.com/Read-Em-And-Weep/NightmareFear/compare/1.2.6...HEAD
+[1.2.6]: https://github.com/Read-Em-And-Weep/NightmareFear/compare/1.2.5...1.2.6
 [1.2.5]: https://github.com/Read-Em-And-Weep/NightmareFear/compare/1.2.4...1.2.5
 [1.2.4]: https://github.com/Read-Em-And-Weep/NightmareFear/compare/1.2.3...1.2.4
 [1.2.3]: https://github.com/Read-Em-And-Weep/NightmareFear/compare/1.2.2...1.2.3
