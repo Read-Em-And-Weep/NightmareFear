@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 - Updated to work in the newest Post-Release Patch 2!
+- Updated a weird interaction in creating the testament screen where it could index nil in a table
 
 ## [1.2.5] - 2026-04-07
 

@@ -1036,6 +1036,12 @@ function mod.CreateRandomBountyCard(screen)
 	if not GameState.NightmareFearCurrentBounty.Vows then
 		mod.CreateRandomBounty()
 	end
+	if not GameState.NightmareFearCurrentBounty.BossEncounterChosen or not GameState.NightmareFearCurrentBounty.BossEncounterChosen.Encounters or not BountyData[GameState.NightmareFearCurrentBounty.BossEncounterChosen] or not screen.BountyTargetIcons[BountyData[GameState.NightmareFearCurrentBounty.BossEncounterChosen].Encounters[1]] then
+		mod.CreateRandomBounty()
+	end
+	if not GameState.NightmareFearCurrentBounty.BossEncounterChosen or not GameState.NightmareFearCurrentBounty.BossEncounterChosen.Encounters or not BountyData[GameState.NightmareFearCurrentBounty.BossEncounterChosen] or not screen.BountyTargetIcons[BountyData[GameState.NightmareFearCurrentBounty.BossEncounterChosen].Encounters[1]] then
+		return
+	end
 	local numVows = #(GameState.NightmareFearCurrentBounty.Vows)
 	local components = screen.Components
 	local itemLocationX = screen.BountyRowStartX + screen.BountyRowSpacingX
