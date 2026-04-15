@@ -837,8 +837,10 @@ modutil.mod.Path.Wrap("TraitTrayShowShrineUpgrades", function(base,screen, activ
 	end
 	if GameState.NightmareFearCurrentBountyActive and GameState.NightmareFearCurrentBounty and ( (CurrentRun.ActiveBounty == nil and not CurrentRun.IsDreamRun) or CurrentHubRoom ~= nil ) then
 		if mod.IsRandomBountyActive() then
-	
-
+			if not GameState.NightmareFearCurrentBounty.BossEncounterChosen or not GameState.NightmareFearCurrentBounty.BossEncounterChosen.Encounters or not BountyData[GameState.NightmareFearCurrentBounty.BossEncounterChosen] or not ScreenData.Shrine.BountyTargetIcons[BountyData[GameState.NightmareFearCurrentBounty.BossEncounterChosen].Encounters[1]] then
+				GameState.NightmareFearCurrentBounty = nil
+				return
+			end
 			SetAlpha({ Id = screen.Components.ActiveShrineBountyBacking.Id, Fraction = 1.0, Duration = 0.2 })
 			SetAlpha({ Id = screen.Components.ActiveShrineBountyFrame.Id, Fraction = 1.0, Duration = 0.2 })
 			SetAnimation({ DestinationId = screen.Components.ActiveShrineBountyFrame.Id, Name = "GUI\\Screens\\Shrine\\TestamentActive" })
@@ -1040,6 +1042,7 @@ function mod.CreateRandomBountyCard(screen)
 		mod.CreateRandomBounty()
 	end
 	if not GameState.NightmareFearCurrentBounty.BossEncounterChosen or not GameState.NightmareFearCurrentBounty.BossEncounterChosen.Encounters or not BountyData[GameState.NightmareFearCurrentBounty.BossEncounterChosen] or not screen.BountyTargetIcons[BountyData[GameState.NightmareFearCurrentBounty.BossEncounterChosen].Encounters[1]] then
+		GameState.NightmareFearCurrentBounty = nil
 		return
 	end
 	local numVows = #(GameState.NightmareFearCurrentBounty.Vows)

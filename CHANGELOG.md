@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- Fixed a potential nil call bug
+
 ## [1.2.6] - 2026-04-15
 
 - Updated to work in the newest Post-Release Patch 2!
