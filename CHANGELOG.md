@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- Updated to work in the newest Post-Release Patch 2!
+
 ## [1.2.5] - 2026-04-07
 
 - Updated how Secrets is handled, for future compatibility with Zagreus Journey (thanks NikkelM!) 

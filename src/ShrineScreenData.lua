@@ -835,7 +835,7 @@ modutil.mod.Path.Wrap("TraitTrayShowShrineUpgrades", function(base,screen, activ
 	if GameState.NightmareFearCurrentBounty and mod.IsRandomBountyActive() and not GameState.NightmareFearCurrentBountyActive then
 		GameState.NightmareFearCurrentBountyActive = true
 	end
-	if GameState.NightmareFearCurrentBountyActive and GameState.NightmareFearCurrentBounty and ( CurrentRun.ActiveBounty == nil or CurrentHubRoom ~= nil ) then
+	if GameState.NightmareFearCurrentBountyActive and GameState.NightmareFearCurrentBounty and ( (CurrentRun.ActiveBounty == nil and not CurrentRun.IsDreamRun) or CurrentHubRoom ~= nil ) then
 		if mod.IsRandomBountyActive() then
 	
 
@@ -1002,7 +1002,7 @@ function mod.GetVowPositionAndScale(screen, totalVows, currentVow)
 end
 
 function mod.IsRandomBountyActive()
-	if GameState.NightmareFearCurrentBounty and GameState.NightmareFearCurrentBounty.TotalFear and GetTotalSpentShrinePoints() >= GameState.NightmareFearCurrentBounty.TotalFear and CurrentRun.Hero.Weapons[GameState.NightmareFearCurrentBounty.Weapon] then
+	if GameState.NightmareFearCurrentBounty and GameState.NightmareFearCurrentBounty.TotalFear and GetTotalSpentShrinePoints() >= GameState.NightmareFearCurrentBounty.TotalFear and CurrentRun.Hero.Weapons[GameState.NightmareFearCurrentBounty.Weapon] and not CurrentRun.IsDreamRun then
 		local vowsActive = true
 		for k,v in ipairs(GameState.NightmareFearCurrentBounty.Vows) do
 			if v[1] and GameState.ShrineUpgrades[v[1]] and v[2] and GameState.ShrineUpgrades[v[1]] >= v[2] then

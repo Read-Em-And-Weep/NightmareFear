@@ -132,7 +132,7 @@ end)]]
 
 -- Simplicity
 table.insert(NamedRequirementsData.HammerLootRequirements, {
-							FunctionName = "RequiredShrineLevel",
+							FunctionName = _PLUGIN.guid.. ".RequiredShrineLevel",
 							FunctionArgs =
 							{
 								ShrineUpgradeName = "NightmareFearHammerlessMetaUpgrade",
@@ -141,7 +141,7 @@ table.insert(NamedRequirementsData.HammerLootRequirements, {
 							},
 						})
 table.insert(NamedRequirementsData.LateHammerLootRequirements, {
-							FunctionName = "RequiredShrineLevel",
+							FunctionName = _PLUGIN.guid.. ".RequiredShrineLevel",
 							FunctionArgs =
 							{
 								ShrineUpgradeName = "NightmareFearHammerlessMetaUpgrade",
@@ -168,7 +168,7 @@ modutil.mod.Path.Wrap("RequiredNotInStore", function(base, source, args )
     return base(source, args)
 end)
 --[[table.insert(NamedRequirementsData.SpellDropRequirements, {
-							FunctionName = "RequiredShrineLevel",
+							FunctionName = _PLUGIN.guid.. ".RequiredShrineLevel",
 							FunctionArgs =
 							{
 								ShrineUpgradeName = "NightmareFearEclipseMetaUpgrade",
@@ -177,7 +177,7 @@ end)
 							},
 						})
 table.insert(NamedRequirementsData.TalentLegal, {
-							FunctionName = "RequiredShrineLevel",
+							FunctionName = _PLUGIN.guid.. ".RequiredShrineLevel",
 							FunctionArgs =
 							{
 								ShrineUpgradeName = "NightmareFearEclipseMetaUpgrade",
@@ -190,7 +190,7 @@ for i, data in ipairs(StoreData.SurfaceShop.GroupsOf) do
 	for _, options in ipairs(data.OptionsData) do
 		if options.Name == "SpellDrop" then
 			table.insert(options.ReplaceRequirements, {
-							FunctionName = "RequiredShrineLevel",
+							FunctionName = _PLUGIN.guid.. ".RequiredShrineLevel",
 							FunctionArgs =
 							{
 								ShrineUpgradeName = "NightmareFearEclipseMetaUpgrade",
@@ -200,7 +200,7 @@ for i, data in ipairs(StoreData.SurfaceShop.GroupsOf) do
 						})
 		elseif options.Name == "TalentDrop" then
 			table.insert(options.ReplaceRequirements, {
-							FunctionName = "RequiredShrineLevel",
+							FunctionName = _PLUGIN.guid.. ".RequiredShrineLevel",
 							FunctionArgs =
 							{
 								ShrineUpgradeName = "NightmareFearEclipseMetaUpgrade",
@@ -211,6 +211,8 @@ for i, data in ipairs(StoreData.SurfaceShop.GroupsOf) do
 		end
 	end	
 end]]
+
+
 
 modutil.mod.Path.Wrap("StoreItemEligible", function(base, itemData, args)
 	itemData = itemData or {}
@@ -392,7 +394,6 @@ modutil.mod.Path.Wrap("CreateDoorRewardPreview", function(base,exitDoor, chosenR
 
     return base(exitDoor, chosenRewardType, chosenLootName, index, args)
 end)
-
 
 -- Vanity
 modutil.mod.Path.Wrap("GetKeepsakeLevel", function(base, traitName, unmodified)
@@ -839,7 +840,7 @@ modutil.mod.Path.Wrap("Kill", function(base, victim, triggerArgs)
 end)
 
 -- Rudiments
-table.insert(TraitRarityData.ElementalGameStateRequirements, {FunctionName = "RequiredShrineLevel",
+table.insert(TraitRarityData.ElementalGameStateRequirements, {FunctionName = _PLUGIN.guid.. ".RequiredShrineLevel",
 							FunctionArgs =
 							{
 								ShrineUpgradeName = "NightmareFearNoElementsMetaUpgrade",
@@ -1060,7 +1061,7 @@ function mod.SetUpNightmareFearNoHelpMetaUpgrade()
 	end
 	for _, roomName in ipairs(roomsToAdd) do
 		if game.RoomData[roomName] and game.RoomData[roomName].GameStateRequirements then 
-		table.insert(game.RoomData[roomName].GameStateRequirements, {FunctionName = "RequiredShrineLevel",
+		table.insert(game.RoomData[roomName].GameStateRequirements, {FunctionName = _PLUGIN.guid.. ".RequiredShrineLevel",
 							FunctionArgs =
 							{
 								ShrineUpgradeName = "NightmareFearNoHelpMetaUpgrade",
@@ -1072,7 +1073,7 @@ function mod.SetUpNightmareFearNoHelpMetaUpgrade()
 	end
 	for _, encounterName in ipairs(encountersToAdd) do
 		if game.EncounterData[encounterName] and game.EncounterData[encounterName].GameStateRequirements then
-		table.insert(game.EncounterData[encounterName].GameStateRequirements,{FunctionName = "RequiredShrineLevel",
+		table.insert(game.EncounterData[encounterName].GameStateRequirements,{FunctionName = _PLUGIN.guid.. ".RequiredShrineLevel",
 							FunctionArgs =
 							{
 								ShrineUpgradeName = "NightmareFearNoHelpMetaUpgrade",
@@ -1114,7 +1115,7 @@ if ZagreusJourney then
 		encounterLookup.BossTheseusAndMinotaur = 3
 		encounterLookup.BossHades = 4
 	end
-	if encounter.Name and encounterLookup[encounter.Name] and GetNumShrineUpgrades("NightmareFearDevotionWeaponMetaUpgrade") >= encounterLookup[encounter.Name] then
+	if encounter.Name and encounterLookup[encounter.Name] and mod.BetrayalWeaponActive() then
 		
 	else
 		return
@@ -1161,6 +1162,13 @@ if ZagreusJourney then
 				table.insert(encounter.PassiveRoomWeapons, newEnemy2.ObjectId)
 			end]]
 
+end
+
+function mod.BetrayalWeaponActive()
+	if GetNumShrineUpgrades("NightmareFearDevotionWeaponMetaUpgrade") < CurrentRun.EnteredBiomes then
+			return false
+	end
+	return true
 end
 
 modutil.mod.Path.Wrap("OpenRunClearScreen", function(base)
@@ -1214,3 +1222,25 @@ modutil.mod.Path.Wrap("SetTraitsOnLoot", function(base,lootData, args)
 	end
 	return base(lootData, args)
 end)
+
+function mod.RequiredShrineLevel(source, functionArgs, args)
+	if functionArgs == nil then return true end
+	local requiredMetaUpgrade = functionArgs.ShrineUpgradeName
+	local comparison = functionArgs.Comparison
+	local level = functionArgs.Value
+	if comparison == "=" then
+		return GetNumShrineUpgrades(requiredMetaUpgrade) == level
+	elseif comparison == ">" then
+		return GetNumShrineUpgrades(requiredMetaUpgrade) > level
+	elseif comparison == ">=" then
+		return GetNumShrineUpgrades(requiredMetaUpgrade) >= level
+	elseif comparison == "<=" then
+		return GetNumShrineUpgrades(requiredMetaUpgrade) <= level
+	elseif comparison == "<" then
+		return GetNumShrineUpgrades(requiredMetaUpgrade) < level
+	elseif comparison == "~=" then
+		return GetNumShrineUpgrades(requiredMetaUpgrade) ~= level
+	else
+		return true
+	end
+end
