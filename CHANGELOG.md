@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.2.8] - 2026-04-17
+
 - Athena's keepsake (Gorgon Amulet) will no longer activate when the Vow of Isolation is active
 - Selene's (Moon Beam) and Athena's (Gorgon Amulet) keepsakes will be blocked in the keepsake rank when swearing the Vows of Eclipse and Isolation respectively
 
@@ -74,7 +76,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - First version of the mod!
 
-[unreleased]: https://github.com/Read-Em-And-Weep/NightmareFear/compare/1.2.7...HEAD
+[unreleased]: https://github.com/Read-Em-And-Weep/NightmareFear/compare/1.2.8...HEAD
+[1.2.8]: https://github.com/Read-Em-And-Weep/NightmareFear/compare/1.2.7...1.2.8
 [1.2.7]: https://github.com/Read-Em-And-Weep/NightmareFear/compare/1.2.6...1.2.7
 [1.2.6]: https://github.com/Read-Em-And-Weep/NightmareFear/compare/1.2.5...1.2.6
 [1.2.5]: https://github.com/Read-Em-And-Weep/NightmareFear/compare/1.2.4...1.2.5
