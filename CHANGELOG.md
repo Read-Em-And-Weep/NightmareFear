@@ -7,6 +7,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- Athena's keepsake (Gorgon Amulet) will no longer activate when the Vow of Isolation is active
+- Selene's (Moon Beam) and Athena's (Gorgon Amulet) keepsakes will be blocked in the keepsake rank when swearing the Vows of Eclipse and Isolation respectively
+
 ## [1.2.7] - 2026-04-15
 
 - Fixed a potential nil call bug

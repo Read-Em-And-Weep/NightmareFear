@@ -1244,3 +1244,69 @@ function mod.RequiredShrineLevel(source, functionArgs, args)
 		return true
 	end
 end
+
+modutil.mod.Path.Wrap("CreateKeepsakeIcon", function(base,screen, components, args)
+	base(screen, components, args)
+	args = args or {}
+	local localx = args.X
+	local localy = args.Y
+	local itemIndex = args.Index
+	local upgradeData = args.UpgradeData
+	local keyAppend = args.KeyAppend or ""
+	local scale = args.Scale or 0.75
+		
+	local locked = false
+	local buttonKey = "UpgradeToggle"..itemIndex..keyAppend
+	if upgradeData.Unlocked then
+		print("check 1")
+		if upgradeData.Gift == "SpellTalentKeepsake" and (GetNumShrineUpgrades("NightmareFearEclipseMetaUpgrade") >= 1 ) and IsGameStateEligible( upgradeData, { NamedRequirementsFalse = {"SurfaceRouteLockedByTyphonKill"}} ) then
+			CreateTextBox({ 
+					Id = components[buttonKey].Id,
+					Text = "BlockedByNightmareFearEclipse_Tooltip",
+					UseDescription = true,
+					OffsetX = 0, OffsetY = 0,
+					Color = Color.Transparent,
+				})
+				print("Check 2.1")
+			locked = true
+			elseif upgradeData.Gift == "AthenaEncounterKeepsake" and (GetNumShrineUpgrades("NightmareFearNoHelpMetaUpgrade")>= 1) and IsGameStateEligible( upgradeData, { NamedRequirementsFalse = {"SurfaceRouteLockedByTyphonKill"}} ) then
+				CreateTextBox({ 
+					Id = components[buttonKey].Id,
+					Text = "BlockedByNightmareFearIsolation_Tooltip",
+					UseDescription = true,
+					OffsetX = 0, OffsetY = 0,
+					Color = Color.Transparent,
+				})
+				print("Check 2.2")
+			locked = true
+		end
+		local blocked = ( Contains(CurrentRun.BlockedKeepsakes, upgradeData.Gift) or ( CurrentRun.UseRecord.NPC_Athena_01 and not HeroHasTrait("AthenaEncounterKeepsake") and upgradeData.Gift == "AthenaEncounterKeepsake" ) ) 
+		local blockedByEnding = false
+		if not IsFateValid() and FatedEnableKeepsakes[upgradeData.Gift] then
+			blocked = true
+		end
+		if TraitData[upgradeData.Gift].BlockedByEnding and not IsGameStateEligible( upgradeData, { NamedRequirementsFalse = {"SurfaceRouteLockedByTyphonKill"}} ) then
+			blockedByEnding = true
+		end
+		print("Check 3")
+		if locked and not ((not CanFreeSwapKeepsakes() and blocked) or blockedByEnding) then 
+			print("Check 4")
+		components[buttonKey.."Lock"] = CreateScreenComponent({ Name = "BlankObstacle", X = localx, Y = localy, Group = "Combat_Menu_Overlay", Animation = "LockedKeepsakeIcon" })
+			SetColor({ Id = components[buttonKey].Id, Color = Color.DarkSlateGray })
+			if components[buttonKey.."Sticker"] then
+				SetColor({ Id = components[buttonKey.."Sticker"].Id, Color = Color.SlateGray })
+			end
+			components[buttonKey].OnPressedFunctionName = "BlockedKeepsakePresentation"
+			components[buttonKey].Blocked = true
+		end
+	end
+end)
+
+table.insert(TraitData.AthenaEncounterKeepsake.UniqueEncounterArgs.GameStateRequirements, {FunctionName = _PLUGIN.guid.. ".RequiredShrineLevel",
+							FunctionArgs =
+							{
+								ShrineUpgradeName = "NightmareFearNoHelpMetaUpgrade",
+								Comparison = "<",
+								Value = 1,
+							},
+						})

@@ -39,6 +39,24 @@ local newHelpTextData = {
       Id = "NightmareFearExpirationMetaUpgrade_Active",
       DisplayName = "{#CombatTextHighlightFormat}Vow of Expiry{#Prev}!",
     },
+    {
+      Id = "BlockedByNightmareFearEclipse_Tooltip",
+      Description = "{$Keywords.BlockedByNightmareFearEclipse}"
+    },
+    {
+      Id = "BlockedByNightmareFearEclipse",
+      DisplayName = "{#AltPenaltyFormat}Unavailable",
+      Description = "This comrade is currently blocked from aiding you due to the swearing of the {#AltPenaltyFormat} Vow of Eclipse{#Prev}."
+    },
+    {
+      Id = "BlockedByNightmareFearIsolation_Tooltip",
+      Description = "{$Keywords.BlockedByNightmareFearIsolation}"
+    },
+    {
+      Id = "BlockedByNightmareFearIsolation",
+      DisplayName = "{#AltPenaltyFormat}Unavailable",
+      Description = "This comrade is currently blocked from aiding you due to the swearing of the {#AltPenaltyFormat} Vow of Isolation{#Prev}."
+    },
 }
 
 local helpTextFile = rom.path.combine(rom.paths.Content(), 'Game/Text/en/HelpText.en.sjson')
@@ -53,4 +71,7 @@ table.insert(game.KeywordList, "AllElementsWithCountNoPlural")
 table.insert(game.KeywordList, "PomNoPlural")
 table.insert(game.KeywordList, "NightmareFearExpiringTrait")
 table.insert(game.KeywordList, "NightmareFearExpiringTraitTooltipBase")
+table.insert(game.KeywordList, "BlockedByNightmareFearEclipse")
+table.insert(game.KeywordList, "BlockedByNightmareFearIsolation")
+
 ResetKeywords()
