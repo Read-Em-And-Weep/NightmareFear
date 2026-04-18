@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- The random Testament system should now actually work :) Hopefully
+
 ## [1.2.9] - 2026-04-18
 
 - Increased gemstone gain from completing random testaments from 50 -> 90

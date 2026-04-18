@@ -1004,7 +1004,7 @@ function mod.GetVowPositionAndScale(screen, totalVows, currentVow)
 end
 
 function mod.IsRandomBountyActive()
-	if GameState.NightmareFearCurrentBounty and GameState.NightmareFearCurrentBounty.TotalFear and GetTotalSpentShrinePoints() >= GameState.NightmareFearCurrentBounty.TotalFear and CurrentRun.Hero.Weapons[GameState.NightmareFearCurrentBounty.Weapon] and not CurrentRun.IsDreamRun then
+	if GameState.NightmareFearCurrentBounty and GameState.NightmareFearCurrentBounty.TotalFear and GetTotalSpentShrinePoints() >= GameState.NightmareFearCurrentBounty.TotalFear and CurrentRun.Hero.Weapons[GameState.NightmareFearCurrentBounty.Weapon] and not (CurrentRun.IsDreamRun and CurrentHubRoom ~= nil) then
 		local vowsActive = true
 		for k,v in ipairs(GameState.NightmareFearCurrentBounty.Vows) do
 			if v[1] and GameState.ShrineUpgrades[v[1]] and v[2] and GameState.ShrineUpgrades[v[1]] >= v[2] then
@@ -1027,9 +1027,11 @@ function mod.IsRandomBountyActive()
 end
 
 function mod.CreateRandomBountyCard(screen)
+	print("In this function")
 	GameState.NightmareFearCreatedBountyCard = false
-	if not IsGameStateEligible({Name = "Unknown"}, {NamedRequirements = { "AllShrineBountiesCompleted" }},{}) then
+	if not IsGameStateEligible({Name = "Unknown"}, {NamedRequirements = { "AllShrineBountiesCompleted" }}) then
 		GameState.NightmareFearCurrentBounty = nil
+		print("Return 1")
 		return
 	end
 	if not GameState.NightmareFearCurrentBounty then
@@ -1038,10 +1040,10 @@ function mod.CreateRandomBountyCard(screen)
 	if not GameState.NightmareFearCurrentBounty.Vows then
 		mod.CreateRandomBounty()
 	end
-	if not GameState.NightmareFearCurrentBounty.BossEncounterChosen or not GameState.NightmareFearCurrentBounty.BossEncounterChosen.Encounters or not BountyData[GameState.NightmareFearCurrentBounty.BossEncounterChosen] or not screen.BountyTargetIcons[BountyData[GameState.NightmareFearCurrentBounty.BossEncounterChosen].Encounters[1]] then
+	if not GameState.NightmareFearCurrentBounty.BossEncounterChosen or not BountyData[GameState.NightmareFearCurrentBounty.BossEncounterChosen] or not BountyData[GameState.NightmareFearCurrentBounty.BossEncounterChosen].Encounters or not BountyData[GameState.NightmareFearCurrentBounty.BossEncounterChosen].Encounters[1] or not ScreenData.Shrine.BountyTargetIcons[BountyData[GameState.NightmareFearCurrentBounty.BossEncounterChosen].Encounters[1]] then
 		mod.CreateRandomBounty()
 	end
-	if not GameState.NightmareFearCurrentBounty.BossEncounterChosen or not GameState.NightmareFearCurrentBounty.BossEncounterChosen.Encounters or not BountyData[GameState.NightmareFearCurrentBounty.BossEncounterChosen] or not screen.BountyTargetIcons[BountyData[GameState.NightmareFearCurrentBounty.BossEncounterChosen].Encounters[1]] then
+	if not GameState.NightmareFearCurrentBounty.BossEncounterChosen or not BountyData[GameState.NightmareFearCurrentBounty.BossEncounterChosen] or not BountyData[GameState.NightmareFearCurrentBounty.BossEncounterChosen].Encounters or not BountyData[GameState.NightmareFearCurrentBounty.BossEncounterChosen].Encounters[1] or not ScreenData.Shrine.BountyTargetIcons[BountyData[GameState.NightmareFearCurrentBounty.BossEncounterChosen].Encounters[1]] then
 		GameState.NightmareFearCurrentBounty = nil
 		return
 	end
@@ -1060,9 +1062,10 @@ function mod.CreateRandomBountyCard(screen)
 		Group = screen.ComponentData.DefaultGroup,
 		X = itemLocationX + screen.BountyTargetOffsetX,
 		Y = itemLocationY + screen.BountyTargetOffsetY,
-		Animation = screen.BountyTargetIcons[BountyData[GameState.NightmareFearCurrentBounty.BossEncounterChosen].Encounters[1]],
+		Animation = ScreenData.Shrine.BountyTargetIcons[BountyData[GameState.NightmareFearCurrentBounty.BossEncounterChosen].Encounters[1]],
 		Scale = screen.BountyBossIconScale
 	})
+
 	components[key.."Target"] = targetItem
 
 	local bountyBacking = CreateScreenComponent({
