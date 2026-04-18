@@ -1258,7 +1258,7 @@ modutil.mod.Path.Wrap("CheckShrineBounties", function(base)
 							CanDuplicate = false,
 							AddResources =
 							{
-								GemPoints = 50,
+								GemPoints = 90,
 							},
 						},}
 					},

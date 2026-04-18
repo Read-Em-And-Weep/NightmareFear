@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- Increased gemstone gain from completing random testaments from 50 -> 90
+
 ## [1.2.8] - 2026-04-17
 
 - Athena's keepsake (Gorgon Amulet) will no longer activate when the Vow of Isolation is active
