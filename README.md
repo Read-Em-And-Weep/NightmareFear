@@ -3,7 +3,7 @@ Have you ever thought that the fear options in Hades are way to easy? That 67 is
 
 Welcome to Nightmare Fear, which offers 17 new vows for you to try and conquer. Can you manage a 134 fear run?
 
-Additionally adds a new system after completing all Testaments where a randomly generated Testament, with a random boss, fear amount, weapon, and specific vow and rank will be offered to you before each run. Completing it will award you with 50 gemstones!
+Additionally adds a new system after completing all Testaments where a randomly generated Testament, with a random boss, fear amount, weapon, and specific vow and rank will be offered to you before each run. Completing it will award you with 90 gemstones!
 
 In-built compatibility with Zagreus Journey, Wrath of Olympus and Perfectionist. Random Chaos Bounties will also include these vows, so beware!
 
