@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- README updated to reflect gemstone gain change
+
 ## [1.2.11] - 2026-04-19
 
 - Increased gemstone gain from completing random Testaments from 90 -> 120, so that it's more advantageous to do the testament than just use Grave Thirst
