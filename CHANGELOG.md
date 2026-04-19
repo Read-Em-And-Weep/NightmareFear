@@ -7,6 +7,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- Increased gemstone gain from completing random Testaments from 90 -> 120, so that it's more advantageous to do the testament than just use Grave Thirst
+- Added a new screen that opens the first time you are offered a random Testament, explaining how the system works
+
 ## [1.2.10] - 2026-04-18
 
 - The random Testament system should now actually work :) Hopefully

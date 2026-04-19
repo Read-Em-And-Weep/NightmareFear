@@ -1027,11 +1027,9 @@ function mod.IsRandomBountyActive()
 end
 
 function mod.CreateRandomBountyCard(screen)
-	print("In this function")
 	GameState.NightmareFearCreatedBountyCard = false
 	if not IsGameStateEligible({Name = "Unknown"}, {NamedRequirements = { "AllShrineBountiesCompleted" }}) then
 		GameState.NightmareFearCurrentBounty = nil
-		print("Return 1")
 		return
 	end
 	if not GameState.NightmareFearCurrentBounty then
@@ -1162,6 +1160,10 @@ function mod.CreateRandomBountyCard(screen)
 
 	end
 	GameState.NightmareFearCreatedBountyCard = true
+	if not GameState.SceenNightmareFearInfoScreen then
+		GenericInfoPresentation( { InfoMessageId = "NightmareFearRandomTestamentIntro" } )
+		GameState.SceenNightmareFearInfoScreen = true
+	end
 	ShrineScreenUpdateItems( screen )
 	ShrineScreenUpdateActivePoints( screen, nil, { Duration = 0.0 } )
 end
@@ -1261,7 +1263,7 @@ modutil.mod.Path.Wrap("CheckShrineBounties", function(base)
 							CanDuplicate = false,
 							AddResources =
 							{
-								GemPoints = 90,
+								GemPoints = 120,
 							},
 						},}
 					},
