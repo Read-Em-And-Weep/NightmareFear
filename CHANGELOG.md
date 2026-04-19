@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.2.11] - 2026-04-19
+
 - Increased gemstone gain from completing random Testaments from 90 -> 120, so that it's more advantageous to do the testament than just use Grave Thirst
 - Added a new screen that opens the first time you are offered a random Testament, explaining how the system works
 
@@ -87,7 +89,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - First version of the mod!
 
-[unreleased]: https://github.com/Read-Em-And-Weep/NightmareFear/compare/1.2.10...HEAD
+[unreleased]: https://github.com/Read-Em-And-Weep/NightmareFear/compare/1.2.11...HEAD
+[1.2.11]: https://github.com/Read-Em-And-Weep/NightmareFear/compare/1.2.10...1.2.11
 [1.2.10]: https://github.com/Read-Em-And-Weep/NightmareFear/compare/1.2.9...1.2.10
 [1.2.9]: https://github.com/Read-Em-And-Weep/NightmareFear/compare/1.2.8...1.2.9
 [1.2.8]: https://github.com/Read-Em-And-Weep/NightmareFear/compare/1.2.7...1.2.8
