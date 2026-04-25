@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.2.13] - 2026-04-25
+
 - Expiring boons will still expire, even if you remove the Vow of Expiry
 - Fixed bad interaction with Pony Altar
 - Ephyra Zoom Out should no longer reveal secrets hidden from Melinoe's eyes
@@ -98,7 +100,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - First version of the mod!
 
-[unreleased]: https://github.com/Read-Em-And-Weep/NightmareFear/compare/1.2.12...HEAD
+[unreleased]: https://github.com/Read-Em-And-Weep/NightmareFear/compare/1.2.13...HEAD
+[1.2.13]: https://github.com/Read-Em-And-Weep/NightmareFear/compare/1.2.12...1.2.13
 [1.2.12]: https://github.com/Read-Em-And-Weep/NightmareFear/compare/1.2.11...1.2.12
 [1.2.11]: https://github.com/Read-Em-And-Weep/NightmareFear/compare/1.2.10...1.2.11
 [1.2.10]: https://github.com/Read-Em-And-Weep/NightmareFear/compare/1.2.9...1.2.10
