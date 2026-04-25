@@ -828,9 +828,7 @@ modutil.mod.Path.Wrap("Kill", function(base, victim, triggerArgs)
 
 	if not triggerArgs.SkipOnDeathFunction then
 		if victim.IsBoss and not victim.BlockPostBossMetaUpgrades and (not victim.UseGroupHealthBar or victim.GroupHealthBarOwner) then
-			if GetNumShrineUpgrades("NightmareFearExpirationMetaUpgrade") >= 1 then
-				mod.ExpireExpiryBoons()
-			end
+			mod.ExpireExpiryBoons()
 			local delay = 0
 			if GetNumShrineUpgrades("NightmareFearPurgingMetaUpgrade") >= 1 then
 				mod.OpenForcePurgeTraitMenu(delay, {})
@@ -1120,6 +1118,12 @@ if ZagreusJourney then
 	else
 		return
 	end
+	CurrentRun = CurrentRun or {}
+	CurrentRun.CurrentRoom = CurrentRun.CurrentRoom or {}
+	CurrentRun.CurrentRoom.Encounter = CurrentRun.CurrentRoom.Encounter or {}
+	if CurrentRun.CurrentRoom.Encounter == nil then return end
+	if SessionMapState.NightmareFearAlreadySpawnedDevotion then return end
+	SessionMapState.NightmareFearAlreadySpawnedDevotion = true
 	local gods = {"AphroditeUpgrade", "ApolloUpgrade","AresUpgrade", "DemeterUpgrade", "HephaestusUpgrade", "HeraUpgrade", "HestiaUpgrade", "PoseidonUpgrade",  "ZeusUpgrade"}
 	local interactedGods = GetInteractedGodsThisRun()
 	local chosenGod = nil
@@ -1137,8 +1141,7 @@ if ZagreusJourney then
 	end
 	local chosenWeapon = chosenGod.."RoomWeapon"
 	SessionMapState.NightmareFearChosenPassiveRoomWeapon = chosenWeapon
-	encounter.PassiveRoomWeapons = encounter.PassiveRoomWeapons or {}
-	encounter.SpawnPassiveRoomWeapons = encounter.SpawnPassiveRoomWeapons or {}
+	CurrentRun.CurrentRoom.Encounter.PassiveRoomWeapons = CurrentRun.CurrentRoom.Encounter.PassiveRoomWeapons or {}
 	local newEnemy = DeepCopyTable( EnemyData[chosenWeapon] )
 			newEnemy.ObjectId = SpawnUnit({ Name = chosenWeapon, Group = "Standing", DestinationId = CurrentRun.Hero.ObjectId })	
 			thread(SetupUnit, newEnemy, CurrentRun )
@@ -1148,7 +1151,7 @@ if ZagreusJourney then
 			AddToGroup({ Id = newEnemy.ObjectId, Names = newEnemy.Groups })
 			
 			if not newEnemy.DontDieWithEncounter then
-				table.insert(encounter.PassiveRoomWeapons, newEnemy.ObjectId)
+				table.insert(CurrentRun.CurrentRoom.Encounter.PassiveRoomWeapons, newEnemy.ObjectId)
 			end
 	--[[local newEnemy2 = DeepCopyTable( EnemyData[chosenWeapon] )
 			newEnemy2.ObjectId = SpawnUnit({ Name = chosenWeapon, Group = "Standing", DestinationId = CurrentRun.Hero.ObjectId })	
@@ -1257,8 +1260,7 @@ modutil.mod.Path.Wrap("CreateKeepsakeIcon", function(base,screen, components, ar
 		
 	local locked = false
 	local buttonKey = "UpgradeToggle"..itemIndex..keyAppend
-	if upgradeData.Unlocked then
-		print("check 1")
+	if upgradeData.Unlocked and not KeepsakeOverhaul then
 		if upgradeData.Gift == "SpellTalentKeepsake" and (GetNumShrineUpgrades("NightmareFearEclipseMetaUpgrade") >= 1 ) and IsGameStateEligible( upgradeData, { NamedRequirementsFalse = {"SurfaceRouteLockedByTyphonKill"}} ) then
 			CreateTextBox({ 
 					Id = components[buttonKey].Id,
@@ -1267,7 +1269,6 @@ modutil.mod.Path.Wrap("CreateKeepsakeIcon", function(base,screen, components, ar
 					OffsetX = 0, OffsetY = 0,
 					Color = Color.Transparent,
 				})
-				print("Check 2.1")
 			locked = true
 			elseif upgradeData.Gift == "AthenaEncounterKeepsake" and (GetNumShrineUpgrades("NightmareFearNoHelpMetaUpgrade")>= 1) and IsGameStateEligible( upgradeData, { NamedRequirementsFalse = {"SurfaceRouteLockedByTyphonKill"}} ) then
 				CreateTextBox({ 
@@ -1277,7 +1278,6 @@ modutil.mod.Path.Wrap("CreateKeepsakeIcon", function(base,screen, components, ar
 					OffsetX = 0, OffsetY = 0,
 					Color = Color.Transparent,
 				})
-				print("Check 2.2")
 			locked = true
 		end
 		local blocked = ( Contains(CurrentRun.BlockedKeepsakes, upgradeData.Gift) or ( CurrentRun.UseRecord.NPC_Athena_01 and not HeroHasTrait("AthenaEncounterKeepsake") and upgradeData.Gift == "AthenaEncounterKeepsake" ) ) 
@@ -1288,9 +1288,7 @@ modutil.mod.Path.Wrap("CreateKeepsakeIcon", function(base,screen, components, ar
 		if TraitData[upgradeData.Gift].BlockedByEnding and not IsGameStateEligible( upgradeData, { NamedRequirementsFalse = {"SurfaceRouteLockedByTyphonKill"}} ) then
 			blockedByEnding = true
 		end
-		print("Check 3")
 		if locked and not ((not CanFreeSwapKeepsakes() and blocked) or blockedByEnding) then 
-			print("Check 4")
 		components[buttonKey.."Lock"] = CreateScreenComponent({ Name = "BlankObstacle", X = localx, Y = localy, Group = "Combat_Menu_Overlay", Animation = "LockedKeepsakeIcon" })
 			SetColor({ Id = components[buttonKey].Id, Color = Color.DarkSlateGray })
 			if components[buttonKey.."Sticker"] then
@@ -1301,7 +1299,7 @@ modutil.mod.Path.Wrap("CreateKeepsakeIcon", function(base,screen, components, ar
 		end
 	end
 end)
-
+if not KeepsakeOverhaul then
 table.insert(TraitData.AthenaEncounterKeepsake.UniqueEncounterArgs.GameStateRequirements, {FunctionName = _PLUGIN.guid.. ".RequiredShrineLevel",
 							FunctionArgs =
 							{
@@ -1310,3 +1308,336 @@ table.insert(TraitData.AthenaEncounterKeepsake.UniqueEncounterArgs.GameStateRequ
 								Value = 1,
 							},
 						})
+					end
+
+modutil.mod.Path.Wrap("EphyraZoomOut", function(base,usee)
+	if GetNumShrineUpgrades("NightmareFearBlindRewardMetaUpgrade") >= 1 then
+		return mod.EphyraZoomOut(usee)	
+	else
+	return base(usee)
+	end
+end)
+
+function mod.EphyraZoomOut(usee)
+AddInputBlock({ Name = "EphyraZoomOut" })
+	AddTimerBlock( CurrentRun, "EphyraZoomOut" )
+	SessionMapState.BlockPause = true
+	thread( HideCombatUI, "EphyraZoomOut", { SkipHideObjectives = true } )
+	SetPlayerInvulnerable( "EphyraZoomOut" )
+	
+	UseableOff({ Id = usee.ObjectId })
+
+	ClearCameraClamp({ LerpTime = 0.8 })
+	thread( SendCritters, { MinCount = 20, MaxCount = 20, StartX = 0, RandomStartOffsetX = 1200, StartY = 300, MinAngle = 75, MaxAngle = 115, MinSpeed = 400, MaxSpeed = 2000, MinInterval = 0.001, MaxInterval = 0.001, GroupName = "CrazyDeathBats" } )
+
+	local cameraTargetId = SpawnObstacle({ Name = "InvisibleTarget" })
+	Teleport({ Id = cameraTargetId, DestinationIsScreenRelative = true, OffsetX = ScreenCenterX, OffsetY = ScreenCenterY - 350 })
+	PanCamera({ Id = cameraTargetId, Duration = 1.0, EaseIn = 0, EaseOut = 0, Retarget = true, FromCurrentLocation = true })
+	FocusCamera({ Fraction = CurrentRun.CurrentRoom.ZoomFraction * 0.95, Duration = 1, ZoomType = "Ease" })
+
+	wait( 0.50 )
+
+	local groupName = "Combat_Menu_Backing"
+	local idsCreated = {}
+
+	ScreenAnchors.EphyraZoomBackground = CreateScreenObstacle({ Name = "rectangle01", Group = "Combat_Menu", X = ScreenCenterX, Y = ScreenCenterY })
+	table.insert( idsCreated, ScreenAnchors.EphyraZoomBackground )
+	SetScale({ Ids = { ScreenAnchors.EphyraZoomBackground }, Fraction = 5 })
+	SetColor({ Ids = { ScreenAnchors.EphyraZoomBackground }, Color = Color.Black })
+	SetAlpha({ Ids = { ScreenAnchors.EphyraZoomBackground }, Fraction = 0, Duration = 0 })
+	SetAlpha({ Ids = { ScreenAnchors.EphyraZoomBackground }, Fraction = 1.0, Duration = 0.2 })
+
+	local letterboxIds = {}
+	if ScreenState.NeedsLetterbox then
+		local letterboxId = CreateScreenObstacle({ Name = "BlankObstacle", X = ScreenCenterX, Y = ScreenCenterY, Group = "Combat_Menu", Animation = "GUI\\Graybox\\NativeAspectRatioFrame", Alpha = 0.0 })
+		table.insert( letterboxIds, letterboxId )
+		SetAlpha({ Id = letterboxId, Fraction = 1.0, Duration = 0.2, EaseIn = 0.0, EaseOut = 1.0 })
+	elseif ScreenState.NeedsPillarbox then
+		local pillarboxLeftId = CreateScreenObstacle({ Name = "BlankObstacle", X = ScreenState.PillarboxLeftX, Y = ScreenCenterY, ScaleX = ScreenState.PillarboxScaleX, Group = "Combat_Menu", Animation = "GUI\\SideBars_01", Alpha = 0.0 })
+		table.insert( letterboxIds, pillarboxLeftId )
+		SetAlpha({ Id = pillarboxLeftId, Fraction = 1.0, Duration = 0.2, EaseIn = 0.0, EaseOut = 1.0 })
+		FlipHorizontal({ Id = pillarboxLeftId })
+		local pillarboxRightId = CreateScreenObstacle({ Name = "BlankObstacle", X = ScreenState.PillarboxRightX, Y = ScreenCenterY, ScaleX = ScreenState.PillarboxScaleX, Group = "Combat_Menu", Animation = "GUI\\SideBars_01", Alpha = 0.0 })
+		table.insert( letterboxIds, pillarboxRightId )
+		SetAlpha({ Id = pillarboxRightId, Fraction = 1.0, Duration = 0.2, EaseIn = 0.0, EaseOut = 1.0 })
+	end
+
+	wait( 0.21 )
+
+	ScreenAnchors.EphyraMapId = CreateScreenObstacle({ Name = "rectangle01", Group = groupName, X = ScreenCenterX, Y = ScreenCenterY })
+	table.insert( idsCreated, ScreenAnchors.EphyraMapId )
+	SetAnimation({ Name = usee.MapAnimation, DestinationId = ScreenAnchors.EphyraMapId })
+	SetHSV({ Id = ScreenAnchors.EphyraMapId, HSV = { 0, -0.15, 0 }, ValueChangeType = "Add" })
+
+	local exitDoorsIPairs = CollapseTableOrdered( MapState.OfferedExitDoors )
+	local sortedDoors = {}
+	for index, door in ipairs( exitDoorsIPairs ) do
+		if not door.SkipUnlock then
+			local room = door.Room
+			local rawScreenLocation = ObstacleData[usee.Name].ScreenLocations[door.ObjectId]
+			if rawScreenLocation ~= nil then
+				door.ScreenLocationX = rawScreenLocation.X
+				door.ScreenLocationY = rawScreenLocation.Y
+				table.insert( sortedDoors, door )
+			end
+		end
+	end
+	table.sort( sortedDoors, EphyraZoomOutDoorSort )
+
+	local attachedCircles = {}
+	for index, door in ipairs( sortedDoors ) do
+		local room = door.Room
+		local screenLocation = { X = door.ScreenLocationX + ScreenCenterNativeOffsetX, Y = door.ScreenLocationY + ScreenCenterNativeOffsetY }
+		local rewardBackingId = CreateScreenObstacle({ Name = "BlankGeoObstacle", Group = groupName, X = screenLocation.X, Y = screenLocation.Y, Scale = 0.6 })
+		if room.RewardStoreName == "MetaProgress" then
+			SetAnimation({ Name = "RoomRewardAvailable_Back_Meta", DestinationId = rewardBackingId })
+		else
+			SetAnimation({ Name = "RoomRewardAvailable_Back_Run", DestinationId = rewardBackingId })
+		end
+		table.insert( attachedCircles, rewardBackingId )
+
+		local rewardIconId = CreateScreenObstacle({ Name = "RoomRewardPreview", Group = groupName, X = screenLocation.X, Y = screenLocation.Y, Scale = 0.6 })
+		SetColor({ Id = rewardIconId, Color = { 0,0,0,1} })
+		table.insert( attachedCircles, rewardIconId )
+		local rewardHidden = false
+		if HasHeroTraitValue( "HiddenRoomReward" ) then
+			SetAnimation({ DestinationId = rewardIconId, Name = "ChaosPreview" })
+			rewardHidden = true
+		elseif room.RewardPreviewOverride and room.RewardPreviewOverride == "ChaosPreview" then
+			SetAnimation({ DestinationId = rewardIconId, Name = "ChaosPreview"})
+		elseif room.ChosenRewardType == nil or room.ChosenRewardType == "Story" then
+			SetAnimation({ DestinationId = rewardIconId, Name = "StoryPreview", SuppressSounds = true })
+		elseif room.ChosenRewardType == "Shop" then
+			SetAnimation({ DestinationId = rewardIconId, Name = "ShopPreview", SuppressSounds = true })
+		elseif room.ChosenRewardType == "Boon" and room.ForceLootName then
+			local previewIcon = LootData[room.ForceLootName].DoorIcon or LootData[room.ForceLootName].Icon
+			if room.BoonRaritiesOverride ~= nil and LootData[room.ForceLootName].DoorUpgradedIcon ~= nil then
+				previewIcon = LootData[room.ForceLootName].DoorUpgradedIcon
+			end
+			SetAnimation({ DestinationId = rewardIconId, Name = previewIcon, SuppressSounds = true })
+		elseif room.ChosenRewardType == "Devotion" then
+
+			local rewardIconAId = CreateScreenObstacle({ Name = "RoomRewardPreview", Group = groupName, X = screenLocation.X + 12, Y = screenLocation.Y - 11, Scale = 0.6 })
+			SetColor({ Id = rewardIconAId, Color = { 0,0,0,1} })
+			SetAnimation({ DestinationId = rewardIconAId, Name = LootData[room.Encounter.LootAName].DoorIcon, SuppressSounds = true })
+			table.insert( attachedCircles, rewardIconAId )
+					
+			local rewardIconBId = CreateScreenObstacle({ Name = "RoomRewardPreview", Group = groupName, X = screenLocation.X - 12, Y = screenLocation.Y + 11, Scale = 0.6 })
+			SetColor({ Id = rewardIconBId, Color = { 0,0,0,1} })
+			SetAnimation({ DestinationId = rewardIconBId, Name = LootData[room.Encounter.LootBName].DoorIcon, SuppressSounds = true })
+			table.insert( attachedCircles, rewardIconBId )
+		else
+			local animName = room.ChosenRewardType
+			local lootData = LootData[room.ChosenRewardType]
+			if lootData ~= nil then
+				animName = lootData.DoorIcon or lootData.Icon or animName
+			end
+			local consumableData = ConsumableData[room.ChosenRewardType]
+			if consumableData ~= nil then
+				animName = consumableData.DoorIcon or consumableData.Icon or animName
+			end
+			SetAnimation({ DestinationId = rewardIconId, Name = animName, SuppressSounds = true })
+		end
+
+		local subIcons = PopulateDoorRewardPreviewSubIcons( door, { ChosenRewardType = room.ChosenRewardType, RewardHidden = rewardHidden } )
+
+		local iconSpacing = 30
+		local numSubIcons = #subIcons
+		local isoOffset = iconSpacing * -0.5 * (numSubIcons - 1)
+		for i, iconData in ipairs( subIcons ) do
+			local iconId = CreateScreenObstacle({ Name = "BlankGeoObstacle", Group = groupName, Scale = 0.6 })
+			local offsetAngle = 330
+			if IsHorizontallyFlipped({ Id = door.ObjectId }) then
+				offsetAngle = 30
+				FlipHorizontal({ Id = iconId })
+			end
+			local offset = CalcOffset( math.rad( offsetAngle ), isoOffset )
+			Attach({ Id = iconId, DestinationId = rewardBackingId, OffsetX = offset.X, OffsetY = offset.Y, OffsetZ = 60, })
+			SetAnimation({ DestinationId = iconId, Name = iconData.Animation or iconData.Name })
+			table.insert( attachedCircles, iconId )
+			isoOffset = isoOffset + iconSpacing
+		end
+
+		if IsHorizontallyFlipped({ Id = door.ObjectId }) then
+			local ids = ( { rewardBackingId, rewardIconId } )
+			if not IsEmpty( ids ) then
+				FlipHorizontal({ Ids = ids })
+			end
+		end
+
+	end
+
+	local melScreenLocation = ObstacleData[usee.Name].ScreenLocations[usee.ObjectId]
+	ScreenAnchors.MelIconId = nil
+	if melScreenLocation ~= nil then
+		ScreenAnchors.MelIconId = CreateScreenObstacle({ Name = "rectangle01", Group = groupName, Animation = "Mel_Icon", X = melScreenLocation.X + ScreenCenterNativeOffsetX, Y = melScreenLocation.Y + ScreenCenterNativeOffsetY })
+		table.insert( idsCreated, ScreenAnchors.MelIconId )
+	end
+
+	SetAlpha({ Ids = { ScreenAnchors.EphyraZoomBackground }, Fraction = 0.0, Duration = 0.35 })
+	PlaySound({ Name = "/Leftovers/World Sounds/MapZoomInShort" })
+	wait( 0.5 )
+
+	local zoomOutTime = 0.5
+
+	ScreenAnchors.EphyraZoomBackground = CreateScreenObstacle({ Name = "rectangle01", Group = groupName, X = ScreenCenterX, Y = ScreenCenterY })
+	table.insert( idsCreated, ScreenAnchors.EphyraZoomBackground )
+	SetScale({ Ids = { ScreenAnchors.EphyraZoomBackground }, Fraction = 5 })
+	SetColor({ Ids = { ScreenAnchors.EphyraZoomBackground }, Color = Color.Black })
+	SetAlpha({ Ids = { ScreenAnchors.EphyraZoomBackground }, Fraction = 0, Duration = 0 })
+
+	PlayInteractAnimation( usee.ObjectId )
+
+	--FocusCamera({ Fraction = 0.195, Duration = 1, ZoomType = "Ease" })
+	--PanCamera({ Id = 664260, Duration = 1.0, EaseIn = 0.3, EaseOut = 0.3 })
+
+	wait(0.3)
+	local notifyName = "ephyraZoomBackIn"
+	NotifyOnControlPressed({ Names = { "Use", "Rush", "Shout", "Attack2", "Attack1", "Attack3", "AutoLock", "Cancel", }, Notify = notifyName })
+	waitUntil( notifyName )
+	PlaySound({ Name = "/Leftovers/World Sounds/MapZoomInShort" })
+
+	--FocusCamera({ Fraction = CurrentRun.CurrentRoom.ZoomFraction * 1.0, Duration = 0.5, ZoomType = "Ease" })
+	--PanCamera({ Id = CurrentRun.Hero.ObjectId, Duration = 0.5 })
+
+	Move({ Id = ScreenAnchors.LetterBoxTop, Angle = 90, Distance = 150, EaseIn = 0.99, EaseOut = 1.0, Duration = 0.5 })
+	Move({ Id = ScreenAnchors.LetterBoxBottom, Angle = 270, Distance = 150, EaseIn = 0.99, EaseOut = 1.0, Duration = 0.5 })
+	SetAlpha({ Ids = { ScreenAnchors.EphyraZoomBackground, ScreenAnchors.MelIconId, ScreenAnchors.EphyraMapId, }, Fraction = 0, Duration = 0.25 })
+	SetAlpha({ Ids = attachedCircles, Fraction = 0, Duration = 0.15 })
+	SetAlpha({ Ids = letterboxIds, Fraction = 0, Duration = 0.15 })
+	Destroy({ Ids = attachedCircles })
+	
+	local exitDoorsIPairs = CollapseTableOrdered( MapState.OfferedExitDoors )
+	for index, door in ipairs( exitDoorsIPairs ) do
+		if not door.SkipUnlock then
+			SetScale({ Id = door.DoorIconId, Fraction = 1, Duration = 0.15 })
+			AddToGroup({ Id = door.DoorIconId, Name = "FX_Standing_Top", DrawGroup = true })
+		end
+	end
+
+	Destroy({ Id = cameraTargetId })
+	PanCamera({ Id = CurrentRun.Hero.ObjectId, OffsetY = 0, Duration = 0.65, EaseIn = 0, EaseOut = 0, Retarget = true })
+	FocusCamera({ Fraction = CurrentRun.CurrentRoom.ZoomFraction, Duration = 0.65, ZoomType = "Ease" })
+	local roomData = RoomData[CurrentRun.CurrentRoom.Name]
+	if not roomData.IgnoreClamps then
+		local cameraClamps = roomData.CameraClamps or GetDefaultClampIds()
+		DebugAssert({ Condition = #cameraClamps ~= 1, Text = "Exactly one camera clamp on a map is nonsensical" })
+		SetCameraClamp({ Ids = cameraClamps, SoftClamp = roomData.SoftClamp })
+	end
+	wait(0.45)
+
+	thread( ShowCombatUI, "EphyraZoomOut" )
+	--SetAlpha({ Ids = { ScreenAnchors.LetterBoxTop, ScreenAnchors.LetterBoxBottom, }, Fraction = 0, Duration = 0.25 })
+	
+	RemoveTimerBlock( CurrentRun, "EphyraZoomOut" )
+	RemoveInputBlock({ Name = "EphyraZoomOut" })
+	SessionMapState.BlockPause = false
+
+	wait( 0.4 )
+	Destroy({ Ids = { ScreenAnchors.LetterBoxTop, ScreenAnchors.LetterBoxBottom, ScreenAnchors.EphyraZoomBackground, ScreenAnchors.MelIconId, ScreenAnchors.EphyraMapId } })
+	
+	wait( 0.35 )
+	SetPlayerVulnerable( "EphyraZoomOut" )
+	UseableOn({ Id = usee.ObjectId })
+
+	Destroy({ Ids = idsCreated })
+	Destroy({ Ids = letterboxIds })
+end
+
+modutil.mod.Path.Wrap("DestroyRequiredKills", function(base,args)
+	CurrentRun = CurrentRun or {}
+	CurrentRun.CurrentRoom = CurrentRun.CurrentRoom or {}
+	CurrentRun.CurrentRoom.Encounter = CurrentRun.CurrentRoom.Encounter or {}
+	if CurrentRun.CurrentRoom.Encounter ~= nil and CurrentRun.CurrentRoom.Encounter.EncounterType ~= "Devotion" then
+		if CurrentRun.CurrentRoom.Encounter.PassiveRoomWeapons then
+			local ids = {}
+			for k, id in pairs(CurrentRun.CurrentRoom.Encounter.PassiveRoomWeapons) do
+				if ActiveEnemies[id] ~= nil then
+					CancelWeaponFireRequests({ Id = id })
+					CleanupEnemy(ActiveEnemies[id])
+				end
+				CancelWeaponFireRequests({ Id = id })
+				CleanupEnemy(ActiveEnemies[id])
+				table.insert(ids, id)
+			end
+			for k, id in ipairs(ids) do
+				ActiveEnemies[id] = nil
+			end
+			Destroy({ Ids = ids })
+			CurrentRun.CurrentRoom.Encounter.PassiveRoomWeapons = {}
+		end
+	end
+	return base(args)
+end)
+
+--[[modutil.mod.Path.Wrap("PonyWarrior-PonyAltar.OpenAltarMenu", function(base)
+	print("In wrap")
+	base()
+	local screen = ActiveScreens["PonyAltar"]
+	if screen == nil then return print("Early nil") end
+	local components = screen.Components
+
+	local index = 0
+	local rowOffset = 300
+	local columnOffset = 190
+	local boonsPerRow = 9
+	local rowsPerPage = 99
+	local rowoffsetX = 200
+	local rowoffsetY = 350
+
+	for _, value in ipairs(screen.ItemOrder) do
+		if GameState.TextLinesRecord[value] then
+			local godName = string.gsub(value, "Gift01", "")
+			local upgradeName = godName .. "Upgrade"
+			local key = "God" .. index
+			local buttonKey = "Button" .. index
+			local fraction = 0.1
+			local keepsakeTraitName = "Force" .. godName .. "BoonKeepsake"
+			if godName == "Selene" then
+				upgradeName = "SpellDrop"
+				keepsakeTraitName = "SpellTalentKeepsake"
+			elseif godName == "Artemis" then
+				upgradeName = "NPC_Artemis_01"
+				keepsakeTraitName = "LowHealthCritKeepsake"
+			elseif godName == "Athena" then
+				upgradeName = "NPC_Athena_01"
+				keepsakeTraitName = "AthenaEncounterKeepsake"
+			elseif godName == "Chaos" then
+				upgradeName = "TrialUpgrade"
+				keepsakeTraitName = "RandomBlessingKeepsake"
+			end
+
+			if CurrentRun.Hero.IsDead or CurrentRun.TraitCache[upgradeName] == nil then
+				local rowIndex = math.floor(index / boonsPerRow)
+				local offsetX = rowoffsetX + columnOffset * (index % boonsPerRow)
+				local offsetY = rowoffsetY + rowOffset * (rowIndex % rowsPerPage)
+				local level = GetKeepsakeLevel(keepsakeTraitName)
+				index = index + 1
+
+
+				if components[buttonKey] and (components[buttonKey].God == "NPC_Athena_01" or components[buttonKey].God == "NPC_Artemis_01") and GetNumShrineUpgrades("NightmareFearNoHelpMetaUpgrade") >= 1 then
+					components[buttonKey].OnPressedFunctionName = "BlockedKeepsakePresentation"
+					SetColor({ Id = components[buttonKey].Id, Color = Color.SemiTransparentBlack, Duration = 0 })
+					CreateTextBox({ 
+					Id = components[buttonKey].Id,
+					Text = "BlockedByNightmareFearIsolation_Tooltip",
+					UseDescription = true,
+					OffsetX = 0, OffsetY = 0,
+					Color = Color.Transparent,
+				})
+				end
+				if components[buttonKey] and (components[buttonKey].God == "SpellDrop") and GetNumShrineUpgrades("NightmareFearEclipseMetaUpgrade") >= 1 then
+									components[buttonKey].OnPressedFunctionName = "BlockedKeepsakePresentation"
+					SetColor({ Id = components[buttonKey].Id, Color = Color.SemiTransparentBlack, Duration = 0 })
+					CreateTextBox({ 
+					Id = components[buttonKey].Id,
+					Text = "BlockedByNightmareFearEclipse_Tooltip",
+					UseDescription = true,
+					OffsetX = 0, OffsetY = 0,
+					Color = Color.Transparent,
+				})
+				end
+			end
+		end
+	end
+end)]]

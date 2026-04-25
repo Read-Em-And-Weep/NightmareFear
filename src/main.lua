@@ -39,7 +39,7 @@ config = chalk.auto 'config.lua'
 public.config = config -- so other mods can access our config
 
 ZagreusJourney = mods['NikkelM-Zagreus_Journey']
-
+KeepsakeOverhaul = mods['PonyWarrior-PonyAltar']
 
 local function on_ready()
 	-- what to do when we are ready, but not re-do on reload.

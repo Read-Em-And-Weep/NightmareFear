@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- Expiring boons will still expire, even if you remove the Vow of Expiry
+- Fixed bad interaction with Pony Altar
+- Ephyra Zoom Out should no longer reveal secrets hidden from Melinoe's eyes
+- Gods should stop trying to kill you more reliably after the battle ends with Vow of Betrayal on (hopefully)
+
 ## [1.2.12] - 2026-04-19
 
 - README updated to reflect gemstone gain change
