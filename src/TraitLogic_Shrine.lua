@@ -1569,3 +1569,68 @@ modutil.mod.Path.Wrap("DestroyRequiredKills", function(base,args)
 	end
 	return base(args)
 end)
+
+
+modutil.mod.Path.Wrap("RunHistoryScreenShowShrineUpgrades", function(base,screen, button)
+	base(screen, button)
+local run = GameState.RunHistory[screen.RunIndex] or CurrentRun
+	local components = screen.Components
+
+	screen.FirstItem = nil
+
+	if run.ShrineUpgradesCache == nil then
+		return
+	end
+
+	local locationX = screen.ShrineUpgradeStartX
+	local locationY = screen.TraitStartY
+	
+	local rowCount = 0
+	local rowIndex = 0
+	for i, upgradeName in ipairs( mod.CombinedShrineUpgradeOrder ) do
+		local upgradeData = MetaUpgradeData[upgradeName]
+		local level = run.ShrineUpgradesCache[upgradeName] or 0
+		if upgradeData ~= nil and level >= 1 then
+
+			local frameKey = "IconFrame"..upgradeData.Name
+			if components[frameKey] then
+				Destroy({Id = components[frameKey].Id})
+			end
+			local frame = CreateScreenComponent({ Name = "BlankInteractableObstacle", Group = screen.ComponentData.DefaultGroup, Scale = screen.ShrineUpgradeBackingScale, X = locationX, Y = locationY, Animation = "GUI\\Screens\\Shrine\\PactActive", Alpha = 0.0, AlphaTarget = 1.0, AlphaTargetDuration = 0.2 })
+			frame.Screen = screen
+			frame.OnMouseOverFunctionName = "MouseOverRunHistoryItem"
+			frame.OnMouseOffFunctionName = "MouseOffRunHistoryItem"
+			frame.Data = upgradeData
+			frame.HighlightAnim = "GUI\\Screens\\Shrine\\PactHover"
+			frame.HighlightScale = screen.ShrineUpgradeBackingScale
+			if screen.FirstItem == nil then
+				screen.FirstItem = frame
+			end
+			components[frameKey] = frame
+			table.insert( screen.IconIds, frame.Id )
+			AttachLua({ Id = frame.Id, Table = frame })
+
+			local iconKey = "Icon"..upgradeData.Name
+			if components[iconKey] then
+				Destroy({Id = components[iconKey].Id})
+			end
+			local component = CreateScreenComponent({ Name = "BlankObstacle", Group = screen.ComponentData.DefaultGroup, Scale = screen.ShrineUpgradeIconScale, X = locationX, Y = locationY, Alpha = 0.0, AlphaTarget = 1.0, AlphaTargetDuration = 0.2 })
+			components[iconKey] = component			
+			SetAnimation({ DestinationId = component.Id , Name = upgradeData.Icon })
+			table.insert( screen.IconIds, component.Id )
+
+			rowCount = rowCount + 1
+			if rowCount >= screen.ShrineUpgradesPerRow then
+				locationY = locationY + screen.ShrineUpgradeSpacingY
+				locationX = screen.ShrineUpgradeStartX
+				rowCount = 0
+				rowIndex = rowIndex + 1
+			else
+				locationX = locationX + screen.ShrineUpgradeSpacingX
+			end
+			if rowIndex >= screen.ShrineUpgradesMaxRows then
+				break
+			end
+		end
+	end
+end)

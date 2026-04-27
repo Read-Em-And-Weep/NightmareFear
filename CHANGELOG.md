@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- Custom Vows should now appear in the Run History Screen
+
 ## [1.2.13] - 2026-04-25
 
 - Expiring boons will still expire, even if you remove the Vow of Expiry
