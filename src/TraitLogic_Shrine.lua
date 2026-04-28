@@ -449,6 +449,9 @@ function mod.OpenForcePurgeTraitMenu( delay, args )
 	if delay then 
 		waitUnmodified( delay, "NightmareFearOpenForcePurgeTraitMenu" )
 	end
+	if IsScreenOpen("NightmareFearSellTraits") then
+		return
+	end
 	args = args or {}
 	GenerateSellTraitShop( CurrentRun.CurrentRoom )
 
@@ -910,6 +913,7 @@ modutil.mod.Path.Wrap("CreateUpgradeChoiceButton", function(base, screen, lootDa
 	local upgradeDescription2 = nil
 	local tooltipData = nil
 	local stackNum = 0
+	screen.NightmareFearExpiringIds = screen.NightmareFearExpiringIds or {}
 
 
 	if lootData.UpgradeOptions[itemIndex].NightmareFearExpiring or itemData.NightmareFearExpiring then
@@ -938,6 +942,7 @@ modutil.mod.Path.Wrap("CreateUpgradeChoiceButton", function(base, screen, lootDa
 					}
 					table.insert(button.Data.CustomStatLinesWithShrineUpgrade.StatLines, "NightmareFearExpiringStatLine")
 				end
+		table.insert(screen.NightmareFearExpiringIds, components[purchaseButtonKey.."NightmareFearExpiringIcon"].Id)
 	end
 
 	return components[purchaseButtonKey]
@@ -957,6 +962,14 @@ modutil.mod.Path.Wrap("DestroyBoonLootButton", function(base,screen, index)
 	end
 	Destroy({ Ids = toDestroy })
 	return base(screen, index)
+end)
+
+modutil.mod.Path.Wrap("DestroyBoonLootButtons", function(base,screen, lootData)
+	if screen.NightmareFearExpiringIds then
+		Destroy({Ids = screen.NightmareFearExpiringIds})
+		screen.NightmareFearExpiringIds = {}
+	end
+	return base(screen, lootData)
 end)
 
 modutil.mod.Path.Wrap("TryUpgradeBoon", function(base,lootData, screen, button)
@@ -1654,4 +1667,34 @@ local run = GameState.RunHistory[screen.RunIndex] or CurrentRun
 			end
 		end
 	end
+end)
+
+--[[modutil.mod.Path.Wrap("IncreaseTraitLevel", function(base, traitData, stacks)
+	local isExpiring = false
+	local expiringRemaining = 0
+	if HeroHasTrait(traitData.Name) then
+	local trait1 = GetHeroTrait(traitData.Name)
+	if trait1.NightmareFearExpiring then
+		isExpiring = true
+		expiringRemaining = traitData.NightmareFearExpiringRemaining or 2
+	end
+	end
+	local newTrait = base(traitData, stacks)
+	if isExpiring then
+		if HeroHasTrait(traitData.Name) then
+		local trait2 = GetHeroTrait(traitData.Name)
+		trait2.NightmareFearExpiring = true
+		trait2.NightmareFearExpiringRemaining = expiringRemaining
+		end
+	end
+	return newTrait
+end)]]
+
+modutil.mod.Path.Wrap("IncreaseTraitLevel", function(base, traitData, stacks)
+	if traitData.NightmareFearExpiring then
+		print("It is an expiring boon!")
+	end
+
+
+	return base(traitData, stacks)
 end)

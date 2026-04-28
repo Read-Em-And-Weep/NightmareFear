@@ -10,6 +10,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Fixed issue where game would crash after defeating Guardian encounters (hopefully)
 - Fixed an issue where you could crash while using Ephyra bats with Vow of Secrets on
 - Updated ReadMe
+- Fixed an issue where the purging screen could open twice, preventing you from moving on
+- Made the expiry ribbon disappear more reliably after rarifying
 
 ## [1.2.14] - 2026-04-27
 
