@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- Fixed a weird package upload
+
 ## [1.2.15] - 2026-04-28
 
 - Fixed issue where game would crash after defeating Guardian encounters (hopefully)
