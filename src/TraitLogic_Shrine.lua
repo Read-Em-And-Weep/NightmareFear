@@ -994,6 +994,10 @@ end)
 function mod.ExpireExpiryBoons()
 	local doInCombatText = false
 	local traitsToRemove = {}
+	if CurrentRun.Hero.Traits == nil then
+		UpdateHeroTraitDictionary()
+	end
+	CurrentRun.Hero.Traits = CurrentRun.Hero.Traits or {}
 	for _, traitData in ipairs( CurrentRun.Hero.Traits ) do
 		if traitData.NightmareFearExpiring then
 			doInCombatText = true
@@ -1319,7 +1323,24 @@ modutil.mod.Path.Wrap("EphyraZoomOut", function(base,usee)
 end)
 
 function mod.EphyraZoomOut(usee)
-AddInputBlock({ Name = "EphyraZoomOut" })
+	CurrentRun = CurrentRun or {}
+	CurrentRun.CurrentRoom = CurrentRun.CurrentRoom or {}
+	CurrentRun.CurrentRoom.ZoomFraction = CurrentRun.CurrentRoom.ZoomFraction or 0.55
+	CurrentRun.CurrentRoom.ZoomFractionAlt = CurrentRun.CurrentRoom.ZoomFractionAlt or 0.63
+CurrentRun.CurrentRoom.CameraZoomWeights =CurrentRun.CurrentRoom.CameraZoomWeights or 
+		{
+			[660496] = 1.00, -- start point of entrance hallway
+			[660493] = 1.00, -- exit door
+			[660489] = 1.75, -- west / bot-low
+			[662609] = 1.65, -- west / bot-high
+			[662592] = 1.40, -- west / mid
+			[660491] = 1.55, -- west / top
+			[660490] = 1.20, -- fountain
+			[660494] = 1.50, -- east / top
+			[660495] = 1.70, -- east / mid
+			[660492] = 1.80, -- east / bot
+		}
+	AddInputBlock({ Name = "EphyraZoomOut" })
 	AddTimerBlock( CurrentRun, "EphyraZoomOut" )
 	SessionMapState.BlockPause = true
 	thread( HideCombatUI, "EphyraZoomOut", { SkipHideObjectives = true } )

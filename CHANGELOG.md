@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- Fixed issue where game would crash after defeating Guardian encounters (hopefully)
+- Fixed an issue where you could crash while using Ephyra bats with Vow of Secrets on
+- Updated ReadMe
+
 ## [1.2.14] - 2026-04-27
 
 - Custom Vows should now appear in the Run History Screen
