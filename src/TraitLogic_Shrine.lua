@@ -1691,10 +1691,5 @@ end)
 end)]]
 
 modutil.mod.Path.Wrap("IncreaseTraitLevel", function(base, traitData, stacks)
-	if traitData.NightmareFearExpiring then
-		print("It is an expiring boon!")
-	end
-
-
 	return base(traitData, stacks)
 end)
