@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.2.16] - 2026-04-28
+
 - Fixed a weird package upload
 
 ## [1.2.15] - 2026-04-28
@@ -114,7 +116,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - First version of the mod!
 
-[unreleased]: https://github.com/Read-Em-And-Weep/NightmareFear/compare/1.2.15...HEAD
+[unreleased]: https://github.com/Read-Em-And-Weep/NightmareFear/compare/1.2.16...HEAD
+[1.2.16]: https://github.com/Read-Em-And-Weep/NightmareFear/compare/1.2.15...1.2.16
 [1.2.15]: https://github.com/Read-Em-And-Weep/NightmareFear/compare/1.2.14...1.2.15
 [1.2.14]: https://github.com/Read-Em-And-Weep/NightmareFear/compare/1.2.13...1.2.14
 [1.2.13]: https://github.com/Read-Em-And-Weep/NightmareFear/compare/1.2.12...1.2.13
