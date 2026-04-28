@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.2.15] - 2026-04-28
+
 - Fixed issue where game would crash after defeating Guardian encounters (hopefully)
 - Fixed an issue where you could crash while using Ephyra bats with Vow of Secrets on
 - Updated ReadMe
@@ -110,7 +112,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - First version of the mod!
 
-[unreleased]: https://github.com/Read-Em-And-Weep/NightmareFear/compare/1.2.14...HEAD
+[unreleased]: https://github.com/Read-Em-And-Weep/NightmareFear/compare/1.2.15...HEAD
+[1.2.15]: https://github.com/Read-Em-And-Weep/NightmareFear/compare/1.2.14...1.2.15
 [1.2.14]: https://github.com/Read-Em-And-Weep/NightmareFear/compare/1.2.13...1.2.14
 [1.2.13]: https://github.com/Read-Em-And-Weep/NightmareFear/compare/1.2.12...1.2.13
 [1.2.12]: https://github.com/Read-Em-And-Weep/NightmareFear/compare/1.2.11...1.2.12
