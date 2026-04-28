@@ -1690,6 +1690,3 @@ end)
 	return newTrait
 end)]]
 
-modutil.mod.Path.Wrap("IncreaseTraitLevel", function(base, traitData, stacks)
-	return base(traitData, stacks)
-end)
