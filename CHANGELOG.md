@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- Fixed an issue causing a crash on the changing oath screen when you had a vow without pips
+
 ## [1.2.16] - 2026-04-28
 
 - Fixed a weird package upload
