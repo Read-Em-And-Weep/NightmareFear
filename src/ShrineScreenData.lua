@@ -358,13 +358,25 @@ function mod.FlipShrineScreenToOld(screen, button)
         local upgradeData = MetaUpgradeData[upgradeName]
 		local maxRank = GetShrineUpgradeMaxRank( upgradeData )
         		if maxRank > 0 then
+					if components["ItemBacking"..index] then
                     table.insert(idsToDestory, components["ItemBacking"..index].Id)
+					end
+					if components["ItemHighlight"..index] then
                     table.insert(idsToDestory, components["ItemHighlight"..index].Id)
+					end
+					if components["ItemButton"..index] then
                     table.insert(idsToDestory, components["ItemButton"..index].Id)
+					end
+					if components["NextRankBacking"..index] then
                     table.insert(idsToDestory, components["NextRankBacking"..index].Id)
+					end
+					if components["ItemButton"..index] then
                     table.insert(idsToDestory, components["ItemButton"..index].Id)
+					end
                     for rank = 1, maxRank do
+						if components["RankPips"..rank..index] then
                         table.insert(idsToDestory, components["RankPips"..rank..index].Id)
+						end
                     end
                 end
     end
