@@ -296,12 +296,12 @@ modutil.mod.Path.Wrap("CreateStackLoot", function(base, args)
 end)
 
 function mod.CheckPomSkipShrineUpgrade(source, args)
-	local currentRoom = CurrentRun.CurrentRoom
+	local currentRoom = CurrentRun.CurrentRoom or {}
 	CurrentRun.NightmareFearPomSkips = CurrentRun.NightmareFearPomSkips or 0
 	if GetNumShrineUpgrades( "NightmareFearPomLevelsMetaUpgrade" ) > CurrentRun.NightmareFearPomSkips then
 		CurrentRun.NightmareFearPomSkips = CurrentRun.NightmareFearPomSkips + 1
 		local consumableId = SpawnObstacle({ Name = "RoomRewardConsolationPrize", DestinationId = args.SpawnPoint, Group = "Standing", OffsetX = args.OffsetX, OffsetY = args.OffsetY })
-		local reward = CreateConsumableItem( consumableId, "RoomRewardConsolationPrize", 0, { IgnoreSounds = currentRoom.SuppressRewardSpawnSounds } )
+		local reward = CreateConsumableItem( consumableId, "RoomRewardConsolationPrize", 0, { IgnoreSounds = currentRoom.SuppressRewardSpawnSounds or false } )
 		MapState.RoomRequiredObjects[reward.ObjectId] = reward
 		thread( BoonSkipShrineUpgradePresentation, reward, args )
 		return reward
