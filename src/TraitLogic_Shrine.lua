@@ -1185,7 +1185,7 @@ if ZagreusJourney then
 end
 
 function mod.BetrayalWeaponActive()
-	if GetNumShrineUpgrades("NightmareFearDevotionWeaponMetaUpgrade") < CurrentRun.EnteredBiomes then
+	if (GameState.ShrineUpgrades.NightmareFearDevotionWeaponMetaUpgrade or 0) < (CurrentRun.EnteredBiomes or 0)then
 			return false
 	end
 	return true

@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- Fixed issue causing error on some saves
+
 ## [1.2.18] - 2026-05-04
 
 - Fixed an issue causing rare crash with Oath of Decay
