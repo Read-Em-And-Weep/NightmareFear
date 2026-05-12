@@ -361,6 +361,7 @@ end)
 modutil.mod.Path.Context.Wrap.Static("StartRoom", function(base, currentRun,currentRoom)
 	modutil.mod.Path.Wrap("RefillMana", function(base)
 	if GetNumShrineUpgrades( "NightmareFearLowManaStartMetaUpgrade" ) >= 1 then
+		base()
 		mod.EmptyMana()
 	else
 		return base()
@@ -369,7 +370,13 @@ modutil.mod.Path.Context.Wrap.Static("StartRoom", function(base, currentRun,curr
 end)
 
 function mod.EmptyMana()
-	ManaDelta(-GetHeroMaxAvailableMana())
+	if CurrentRun.Hero.Mana > 0 then
+	 CurrentRun.Hero.Mana = 0
+		return UpdateManaMeterUI() 
+		--ManaDelta(-GetHeroMaxAvailableMana())
+	else
+		return
+	end
 end
 
 function mod.DoTaxLoss(shrineLevel)
@@ -453,7 +460,7 @@ function mod.OpenForcePurgeTraitMenu( delay, args )
 		return
 	end
 	args = args or {}
-	GenerateSellTraitShop( CurrentRun.CurrentRoom )
+	mod.GenerateSellTraitShop( CurrentRun.CurrentRoom )
 
 	AltAspectRatioFramesShow()
 
@@ -468,10 +475,10 @@ function mod.OpenForcePurgeTraitMenu( delay, args )
 	screen.ShopItemStartY = screen.ShopItemStartY + ScreenCenterNativeOffsetY
 
 	local outdatedData = false
-	if CurrentRun.CurrentRoom.SellOptions == nil then
+	if CurrentRun.CurrentRoom.NightmareFearSellOptions == nil then
 		outdatedData = true
 	else
-		for itemIndex, sellData in pairs( CurrentRun.CurrentRoom.SellOptions ) do
+		for itemIndex, sellData in pairs( CurrentRun.CurrentRoom.NightmareFearSellOptions ) do
 			if sellData.Name then
 				if not HeroHasTrait( sellData.Name ) then
 					outdatedData = true
@@ -486,15 +493,15 @@ function mod.OpenForcePurgeTraitMenu( delay, args )
 		end
 	end
 	if outdatedData then
-		CurrentRun.CurrentRoom.SellOptions = nil
-		GenerateSellTraitShop( CurrentRun.CurrentRoom )
+		CurrentRun.CurrentRoom.NightmareFearSellOptions = nil
+		mod.GenerateSellTraitShop( CurrentRun.CurrentRoom )
 	end
 
-	if TableLength(CurrentRun.CurrentRoom.SellOptions) < 1 then
+	if TableLength(CurrentRun.CurrentRoom.NightmareFearSellOptions) < 1 then
 		return mod.CloseForceSellScreen(screen)
 	end
 
-	for i, data in pairs(CurrentRun.CurrentRoom.SellOptions) do
+	for i, data in pairs(CurrentRun.CurrentRoom.NightmareFearSellOptions) do
 		if not data.Value then
 			data.Value = GetTraitValue( GetHeroTrait( data.Name ))
 		end	
@@ -503,7 +510,7 @@ function mod.OpenForcePurgeTraitMenu( delay, args )
 	wait( 0.2 )
 	mod.CreateForceSellButtons( screen )
 
-	if TableLength( CurrentRun.CurrentRoom.SellOptions ) > 0 then
+	if TableLength( CurrentRun.CurrentRoom.NightmareFearSellOptions ) > 0 then
 		thread( PlayVoiceLines, HeroVoiceLines.SellTraitShopUsedVoiceLines, true )
 	else
 		thread( PlayVoiceLines, HeroVoiceLines.SellTraitShopSoldOutVoiceLines, true )
@@ -512,6 +519,16 @@ function mod.OpenForcePurgeTraitMenu( delay, args )
 	screen.KeepOpen = true
 	HandleScreenInput( screen )
 
+end
+
+function mod.GenerateSellTraitValues( currentRoom, args )
+	args = args or {}
+	currentRoom.NightmareFearSellValues = {}
+	for index, traitData in ipairs( CurrentRun.Hero.Traits ) do
+		if IsGodTrait( traitData.Name, { ForShop = true }) and traitData.Rarity and not Contains( args.ExclusionNames, traitData.Name ) then
+			currentRoom.NightmareFearSellValues[traitData.Name] = { Name = traitData.Name, Value = GetTraitValue( traitData ), Rarity = traitData.Rarity }
+		end
+	end
 end
 
 function mod.CreateForceSellButtons( screen )
@@ -532,7 +549,21 @@ function mod.CreateForceSellButtons( screen )
 	local firstOption = true
 	local sellList = {}
 	local upgradeOptionsTable = {}
-	for itemIndex, sellData in pairs( CurrentRun.CurrentRoom.SellOptions ) do
+
+	if IsEmpty(CurrentRun.CurrentRoom.NightmareFearSellOptions) then
+		mod.GenerateSellTraitShop( CurrentRun.CurrentRoom )
+		for i, data in pairs(CurrentRun.CurrentRoom.NightmareFearSellOptions) do
+		if not data.Value then
+			data.Value = GetTraitValue( GetHeroTrait( data.Name ))
+		end	
+	end
+	end
+
+		if IsEmpty(CurrentRun.CurrentRoom.NightmareFearSellOptions) then
+		return mod.CloseForceSellScreen(screen)
+		end
+
+	for itemIndex, sellData in pairs( CurrentRun.CurrentRoom.NightmareFearSellOptions ) do
 		for index, traitData in ipairs( CurrentRun.Hero.Traits ) do
 			if sellData.Name == traitData.Name and traitData.Rarity and ( upgradeOptionsTable[traitData.Name] == nil or GetRarityValue( upgradeOptionsTable[traitData.Name].Rarity ) > GetRarityValue( traitData.Rarity ) ) then
 				upgradeOptionsTable[traitData.Name] = { Data = traitData, Value = sellData.Value }
@@ -544,8 +575,13 @@ function mod.CreateForceSellButtons( screen )
 		table.insert( sellList, value )
 	end
 
+	if IsEmpty(sellList) then
+		return mod.CloseForceSellScreen(screen)
+	end
+
 	local screenData = ScreenData.UpgradeChoice
 
+	local hasButton = false
 	for itemIndex, sellData in ipairs( sellList ) do
 		local upgradeData = sellData.Data
 		if upgradeData ~= nil then
@@ -714,6 +750,7 @@ function mod.CreateForceSellButtons( screen )
 				TeleportCursor({ OffsetX = itemLocationX, OffsetY = itemLocationY, ForceUseCheck = true })
 				firstOption = false
 			end
+			hasButton = true
 		end
 
 		itemLocationX = itemLocationX + itemLocationXSpacer
@@ -723,7 +760,9 @@ function mod.CreateForceSellButtons( screen )
 		end
 	end
 
-	UpdateStoreReroll( screen, CurrentRun.CurrentRoom.SellOptions, _PLUGIN.guid .. ".ForceSellTraitScreenReroll" )
+	if not hasButton then return mod.CloseForceSellScreen(screen) end
+
+	UpdateStoreReroll( screen, CurrentRun.CurrentRoom.NightmareFearSellOptions, _PLUGIN.guid .. ".ForceSellTraitScreenReroll" )
 
 end
 
@@ -731,9 +770,9 @@ function mod.HandleForceSellChoiceSelection( screen, button )
 	RemoveWeaponTrait( button.UpgradeName, { Silent = true } )
 	AddResource( "Money", button.Value, "TraitSell" )
 
-	for index, sellData in pairs( CurrentRun.CurrentRoom.SellOptions ) do
+	for index, sellData in pairs( CurrentRun.CurrentRoom.NightmareFearSellOptions ) do
 		if sellData.Name == button.UpgradeName then
-			CurrentRun.CurrentRoom.SellOptions[index] = nil
+			CurrentRun.CurrentRoom.NightmareFearSellOptions[index] = nil
 		end
 	end
 	
@@ -800,17 +839,49 @@ function mod.CloseForceSellScreen(screen)
 
 end
 
+function mod.GenerateSellTraitShop( currentRoom, args )
+	args = args or {}
+	mod.GenerateSellTraitValues( currentRoom, args )
+
+	local commonTraits = {}
+	if args.PrioritizeCommonTraits then
+		for traitName, traitValue in pairs( currentRoom.NightmareFearSellValues ) do
+			if traitValue.Rarity == "Common" then
+				table.insert( commonTraits, traitValue )
+			end
+		end
+	end
+
+	if currentRoom.NightmareFearSellOptions == nil then
+		currentRoom.NightmareFearSellOptions = {}
+		for i = 1, args.SellOptionCount or 3 do
+			if IsEmpty( currentRoom.NightmareFearSellValues ) then
+				break
+			end
+			--DebugPrint({ Text = "TableLength( currentRoom.SellValues ) = "..TableLength(currentRoom.SellValues) })
+			if args.PrioritizeCommonTraits and not IsEmpty( commonTraits ) then
+				local chosenTrait = RemoveRandomValue( commonTraits )
+				table.insert( currentRoom.NightmareFearSellOptions, chosenTrait )
+				RemoveValue( currentRoom.NightmareFearSellValues, chosenTrait )
+			else
+				table.insert( currentRoom.NightmareFearSellOptions, RemoveRandomValue( currentRoom.NightmareFearSellValues ) )
+			end
+		end
+	end
+end
+
 function mod.ForceSellTraitScreenReroll( screen )
 	SellTraitScreenDestroyButtons( screen )
 	local exclusions = {}
-	if not IsEmpty( CurrentRun.CurrentRoom.SellOptions ) and not IsEmpty( CurrentRun.CurrentRoom.SellValues ) then
-		exclusions = { GetRandomValue( CurrentRun.CurrentRoom.SellOptions ).Name }
+	if not IsEmpty( CurrentRun.CurrentRoom.NightmareFearSellOptions ) and not IsEmpty( CurrentRun.CurrentRoom.NightmareFearSellValues ) then
+		exclusions = { GetRandomValue( CurrentRun.CurrentRoom.NightmareFearSellOptions ).Name }
 	end
-	CurrentRun.CurrentRoom.SellOptions = nil
-	GenerateSellTraitShop( CurrentRun.CurrentRoom, { ExclusionNames = exclusions } )
+	CurrentRun.CurrentRoom.NightmareFearSellOptions = nil
+	mod.GenerateSellTraitShop( CurrentRun.CurrentRoom, { ExclusionNames = exclusions } )
 	mod.CreateForceSellButtons( screen )
 end
-modutil.mod.Path.Wrap("Kill", function(base, victim, triggerArgs)
+
+--[[modutil.mod.Path.Wrap("Kill", function(base, victim, triggerArgs)
 	base(victim, triggerArgs)
 	if victim == nil then
 		return
@@ -838,6 +909,23 @@ modutil.mod.Path.Wrap("Kill", function(base, victim, triggerArgs)
 			end
 		end
 	end
+end)]]
+
+modutil.mod.Path.Wrap("PostCombatAudio", function(base,eventSource)
+	local encounter = CurrentRun.CurrentRoom.Encounter
+	local currentRoom = CurrentRun.CurrentRoom
+
+	if encounter and encounter.EncounterType == "Boss" and not encounter.SkipBossTraits and not currentRoom.NightmareFearPurgeRun then
+		mod.ExpireExpiryBoons()
+		if GetNumShrineUpgrades("NightmareFearPurgingMetaUpgrade") >= 1 then
+			currentRoom.NightmareFearPurgeRun = true
+			local delay = 0
+			thread(mod.OpenForcePurgeTraitMenu,delay, {})
+		end
+	end
+
+
+	return base(eventSource)
 end)
 
 -- Rudiments
@@ -1138,7 +1226,7 @@ if ZagreusJourney then
 	CurrentRun = CurrentRun or {}
 	CurrentRun.CurrentRoom = CurrentRun.CurrentRoom or {}
 	CurrentRun.CurrentRoom.Encounter = CurrentRun.CurrentRoom.Encounter or {}
-	if CurrentRun.CurrentRoom.Encounter == nil then return end
+	if IsEmpty(CurrentRun.CurrentRoom.Encounter) then return end
 	if SessionMapState.NightmareFearAlreadySpawnedDevotion then return end
 	SessionMapState.NightmareFearAlreadySpawnedDevotion = true
 	local gods = {"AphroditeUpgrade", "ApolloUpgrade","AresUpgrade", "DemeterUpgrade", "HephaestusUpgrade", "HeraUpgrade", "HestiaUpgrade", "PoseidonUpgrade",  "ZeusUpgrade"}

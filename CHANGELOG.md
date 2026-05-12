@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- It should now be harder to leave the room before being forced to purge your boons
+- Purging is less likely to lock you in a screen with no options
+- Born Gain should not trigger when you enter a room with Vow of Panic
+
 ## [1.2.19] - 2026-05-10
 
 - Fixed issue causing error on some saves
