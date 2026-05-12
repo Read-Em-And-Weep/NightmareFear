@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.2.20] - 2026-05-12
+
 - It should now be harder to leave the room before being forced to purge your boons
 - Purging is less likely to lock you in a screen with no options
 - Born Gain should not trigger when you enter a room with Vow of Panic
@@ -132,7 +134,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - First version of the mod!
 
-[unreleased]: https://github.com/Read-Em-And-Weep/NightmareFear/compare/1.2.19...HEAD
+[unreleased]: https://github.com/Read-Em-And-Weep/NightmareFear/compare/1.2.20...HEAD
+[1.2.20]: https://github.com/Read-Em-And-Weep/NightmareFear/compare/1.2.19...1.2.20
 [1.2.19]: https://github.com/Read-Em-And-Weep/NightmareFear/compare/1.2.18...1.2.19
 [1.2.18]: https://github.com/Read-Em-And-Weep/NightmareFear/compare/1.2.17...1.2.18
 [1.2.17]: https://github.com/Read-Em-And-Weep/NightmareFear/compare/1.2.16...1.2.17
