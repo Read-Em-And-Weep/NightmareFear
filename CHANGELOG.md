@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- Fixed an issue that gave Mel insomnia and prevented her doing Dream Runs
+
 ## [1.2.20] - 2026-05-12
 
 - It should now be harder to leave the room before being forced to purge your boons

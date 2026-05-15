@@ -912,10 +912,11 @@ end
 end)]]
 
 modutil.mod.Path.Wrap("PostCombatAudio", function(base,eventSource)
-	local encounter = CurrentRun.CurrentRoom.Encounter
+	local currentRun = CurrentRun
 	local currentRoom = CurrentRun.CurrentRoom
+	local currentEncounter = eventSource or CurrentRun.CurrentRoom.Encounter
 
-	if encounter and encounter.EncounterType == "Boss" and not encounter.SkipBossTraits and not currentRoom.NightmareFearPurgeRun then
+	if currentEncounter and currentEncounter.EncounterType == "Boss" and not currentEncounter.SkipBossTraits and not currentRoom.NightmareFearPurgeRun then
 		mod.ExpireExpiryBoons()
 		if GetNumShrineUpgrades("NightmareFearPurgingMetaUpgrade") >= 1 then
 			currentRoom.NightmareFearPurgeRun = true
