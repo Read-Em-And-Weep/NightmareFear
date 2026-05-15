@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.2.21] - 2026-05-15
+
 - Fixed an issue that gave Mel insomnia and prevented her doing Dream Runs
 
 ## [1.2.20] - 2026-05-12
@@ -136,7 +138,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - First version of the mod!
 
-[unreleased]: https://github.com/Read-Em-And-Weep/NightmareFear/compare/1.2.20...HEAD
+[unreleased]: https://github.com/Read-Em-And-Weep/NightmareFear/compare/1.2.21...HEAD
+[1.2.21]: https://github.com/Read-Em-And-Weep/NightmareFear/compare/1.2.20...1.2.21
 [1.2.20]: https://github.com/Read-Em-And-Weep/NightmareFear/compare/1.2.19...1.2.20
 [1.2.19]: https://github.com/Read-Em-And-Weep/NightmareFear/compare/1.2.18...1.2.19
 [1.2.18]: https://github.com/Read-Em-And-Weep/NightmareFear/compare/1.2.17...1.2.18
