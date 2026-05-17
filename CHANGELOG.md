@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.2.22] - 2026-05-17
+
 - Prevented some potential overwritings of CurrentRun, Encounter and Hero by making variables local
 
 ## [1.2.21] - 2026-05-15
@@ -140,7 +142,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - First version of the mod!
 
-[unreleased]: https://github.com/Read-Em-And-Weep/NightmareFear/compare/1.2.21...HEAD
+[unreleased]: https://github.com/Read-Em-And-Weep/NightmareFear/compare/1.2.22...HEAD
+[1.2.22]: https://github.com/Read-Em-And-Weep/NightmareFear/compare/1.2.21...1.2.22
 [1.2.21]: https://github.com/Read-Em-And-Weep/NightmareFear/compare/1.2.20...1.2.21
 [1.2.20]: https://github.com/Read-Em-And-Weep/NightmareFear/compare/1.2.19...1.2.20
 [1.2.19]: https://github.com/Read-Em-And-Weep/NightmareFear/compare/1.2.18...1.2.19
