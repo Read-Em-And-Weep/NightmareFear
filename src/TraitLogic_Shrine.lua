@@ -912,7 +912,7 @@ end
 end)]]
 
 modutil.mod.Path.Wrap("PostCombatAudio", function(base,eventSource)
-	local currentRun = CurrentRun
+	local currentRun = CurrentRun or {}
 	local currentRoom = currentRun.CurrentRoom
 	local currentEncounter = eventSource or currentRoom.Encounter
 
