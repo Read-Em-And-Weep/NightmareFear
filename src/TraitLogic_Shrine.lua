@@ -913,8 +913,8 @@ end)]]
 
 modutil.mod.Path.Wrap("PostCombatAudio", function(base,eventSource)
 	local currentRun = CurrentRun
-	local currentRoom = CurrentRun.CurrentRoom
-	local currentEncounter = eventSource or CurrentRun.CurrentRoom.Encounter
+	local currentRoom = currentRun.CurrentRoom
+	local currentEncounter = eventSource or currentRoom.Encounter
 
 	if currentEncounter and currentEncounter.EncounterType == "Boss" and not currentEncounter.SkipBossTraits and not currentRoom.NightmareFearPurgeRun then
 		mod.ExpireExpiryBoons()
@@ -1209,7 +1209,6 @@ end)
 
 	
 function mod.SetUpBetrayalWeapon(encounter, args)
-	encounter = encounter or CurrentRun.CurrentRoom.Encounter or {}
 		local encounterLookup = {BossHecate01 = 1, BossHecate02 = 1, BossScylla01 = 2, BossScylla02 = 2, BossInfestedCerberus01 = 3, BossInfestedCerberus02 = 3, BossChronos01 = 4, BossChronos02 = 4, BossPolyphemus01 = 1, BossPolyphemus02 = 1, BossEris01 = 2,BossEris02 = 2, BossPrometheus01 = 3,BossPrometheus02 = 3, BossTyphonHead01 = 4, BossTyphonHead02 = 4}
 if ZagreusJourney then
 		encounterLookup.BossHarpy1 = 1
@@ -1224,10 +1223,9 @@ if ZagreusJourney then
 	else
 		return
 	end
-	CurrentRun = CurrentRun or {}
-	CurrentRun.CurrentRoom = CurrentRun.CurrentRoom or {}
-	CurrentRun.CurrentRoom.Encounter = CurrentRun.CurrentRoom.Encounter or {}
-	if IsEmpty(CurrentRun.CurrentRoom.Encounter) then return end
+	local currentRun = CurrentRun or {}
+local currentRoom = currentRun.CurrentRoom or {}
+if IsEmpty(encounter) then return end
 	if SessionMapState.NightmareFearAlreadySpawnedDevotion then return end
 	SessionMapState.NightmareFearAlreadySpawnedDevotion = true
 	local gods = {"AphroditeUpgrade", "ApolloUpgrade","AresUpgrade", "DemeterUpgrade", "HephaestusUpgrade", "HeraUpgrade", "HestiaUpgrade", "PoseidonUpgrade",  "ZeusUpgrade"}
@@ -1247,7 +1245,7 @@ if ZagreusJourney then
 	end
 	local chosenWeapon = chosenGod.."RoomWeapon"
 	SessionMapState.NightmareFearChosenPassiveRoomWeapon = chosenWeapon
-	CurrentRun.CurrentRoom.Encounter.PassiveRoomWeapons = CurrentRun.CurrentRoom.Encounter.PassiveRoomWeapons or {}
+	encounter.PassiveRoomWeapons = encounter.PassiveRoomWeapons or {}
 	local newEnemy = DeepCopyTable( EnemyData[chosenWeapon] )
 			newEnemy.ObjectId = SpawnUnit({ Name = chosenWeapon, Group = "Standing", DestinationId = CurrentRun.Hero.ObjectId })	
 			thread(SetupUnit, newEnemy, CurrentRun )
@@ -1281,17 +1279,17 @@ function mod.BetrayalWeaponActive()
 end
 
 modutil.mod.Path.Wrap("OpenRunClearScreen", function(base)
-	CurrentRun = CurrentRun or {}
-	CurrentRun.CurrentRoom = CurrentRun.CurrentRoom or {}
-	CurrentRun.CurrentRoom.Encounter = CurrentRun.CurrentRoom.Encounter or {}
-	if CurrentRun.CurrentRoom.Encounter ~= nil then
-		if CurrentRun.CurrentRoom.Encounter.PassiveRoomWeapons then
-			for k, id in pairs(CurrentRun.CurrentRoom.Encounter.PassiveRoomWeapons) do
+	local currentRun = CurrentRun or {}
+local currentRoom = currentRun.CurrentRoom or {}
+local encounter = currentRoom.Encounter or {}
+	if encounter ~= nil then
+		if encounter.PassiveRoomWeapons then
+			for k, id in pairs(encounter.PassiveRoomWeapons) do
 				if ActiveEnemies[id] ~= nil then
 					CleanupEnemy(ActiveEnemies[id])
 				end
 			end
-			Destroy({ Ids = CurrentRun.CurrentRoom.Encounter.PassiveRoomWeapons })
+			Destroy({ Ids = encounter.PassiveRoomWeapons })
 		end
 	end
 	return base()
@@ -1425,11 +1423,12 @@ modutil.mod.Path.Wrap("EphyraZoomOut", function(base,usee)
 end)
 
 function mod.EphyraZoomOut(usee)
-	CurrentRun = CurrentRun or {}
-	CurrentRun.CurrentRoom = CurrentRun.CurrentRoom or {}
-	CurrentRun.CurrentRoom.ZoomFraction = CurrentRun.CurrentRoom.ZoomFraction or 0.55
-	CurrentRun.CurrentRoom.ZoomFractionAlt = CurrentRun.CurrentRoom.ZoomFractionAlt or 0.63
-CurrentRun.CurrentRoom.CameraZoomWeights =CurrentRun.CurrentRoom.CameraZoomWeights or 
+	local currentRun = CurrentRun or {}
+local currentRoom = currentRun.CurrentRoom or {}
+
+local zoomFraction =currentRoom.ZoomFraction or 0.55
+	local zoomfractionAlt = currentRoom.ZoomFractionAlt or 0.63
+local cameraZoomWeights =currentRoom.CameraZoomWeights or 
 		{
 			[660496] = 1.00, -- start point of entrance hallway
 			[660493] = 1.00, -- exit door
@@ -1456,7 +1455,7 @@ CurrentRun.CurrentRoom.CameraZoomWeights =CurrentRun.CurrentRoom.CameraZoomWeigh
 	local cameraTargetId = SpawnObstacle({ Name = "InvisibleTarget" })
 	Teleport({ Id = cameraTargetId, DestinationIsScreenRelative = true, OffsetX = ScreenCenterX, OffsetY = ScreenCenterY - 350 })
 	PanCamera({ Id = cameraTargetId, Duration = 1.0, EaseIn = 0, EaseOut = 0, Retarget = true, FromCurrentLocation = true })
-	FocusCamera({ Fraction = CurrentRun.CurrentRoom.ZoomFraction * 0.95, Duration = 1, ZoomType = "Ease" })
+	FocusCamera({ Fraction = zoomFraction * 0.95, Duration = 1, ZoomType = "Ease" })
 
 	wait( 0.50 )
 
@@ -1640,7 +1639,7 @@ CurrentRun.CurrentRoom.CameraZoomWeights =CurrentRun.CurrentRoom.CameraZoomWeigh
 
 	Destroy({ Id = cameraTargetId })
 	PanCamera({ Id = CurrentRun.Hero.ObjectId, OffsetY = 0, Duration = 0.65, EaseIn = 0, EaseOut = 0, Retarget = true })
-	FocusCamera({ Fraction = CurrentRun.CurrentRoom.ZoomFraction, Duration = 0.65, ZoomType = "Ease" })
+	FocusCamera({ Fraction = zoomFraction, Duration = 0.65, ZoomType = "Ease" })
 	local roomData = RoomData[CurrentRun.CurrentRoom.Name]
 	if not roomData.IgnoreClamps then
 		local cameraClamps = roomData.CameraClamps or GetDefaultClampIds()
@@ -1668,13 +1667,13 @@ CurrentRun.CurrentRoom.CameraZoomWeights =CurrentRun.CurrentRoom.CameraZoomWeigh
 end
 
 modutil.mod.Path.Wrap("DestroyRequiredKills", function(base,args)
-	CurrentRun = CurrentRun or {}
-	CurrentRun.CurrentRoom = CurrentRun.CurrentRoom or {}
-	CurrentRun.CurrentRoom.Encounter = CurrentRun.CurrentRoom.Encounter or {}
-	if CurrentRun.CurrentRoom.Encounter ~= nil and CurrentRun.CurrentRoom.Encounter.EncounterType ~= "Devotion" then
-		if CurrentRun.CurrentRoom.Encounter.PassiveRoomWeapons then
+	local currentRun = CurrentRun or {}
+local currentRoom = currentRun.CurrentRoom or {}
+local encounter = currentRoom.Encounter or {}
+	if encounter ~= nil and encounter.EncounterType ~= "Devotion" then
+		if encounter.PassiveRoomWeapons then
 			local ids = {}
-			for k, id in pairs(CurrentRun.CurrentRoom.Encounter.PassiveRoomWeapons) do
+			for k, id in pairs(encounter.PassiveRoomWeapons) do
 				if ActiveEnemies[id] ~= nil then
 					CancelWeaponFireRequests({ Id = id })
 					CleanupEnemy(ActiveEnemies[id])
@@ -1687,7 +1686,7 @@ modutil.mod.Path.Wrap("DestroyRequiredKills", function(base,args)
 				ActiveEnemies[id] = nil
 			end
 			Destroy({ Ids = ids })
-			CurrentRun.CurrentRoom.Encounter.PassiveRoomWeapons = {}
+			encounter.PassiveRoomWeapons = {}
 		end
 	end
 	return base(args)

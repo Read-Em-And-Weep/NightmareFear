@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- Prevented some potential overwritings of CurrentRun, Encounter and Hero 
+
 ## [1.2.21] - 2026-05-15
 
 - Fixed an issue that gave Mel insomnia and prevented her doing Dream Runs
