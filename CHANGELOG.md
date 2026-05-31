@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.2.23] - 2026-05-31
+
 - Removed a wrap that was causing some issues with global variables in Zag Journey
 - Boons will stay expiring when upgraded or rarified
 
@@ -145,7 +147,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - First version of the mod!
 
-[unreleased]: https://github.com/Read-Em-And-Weep/NightmareFear/compare/1.2.22...HEAD
+[unreleased]: https://github.com/Read-Em-And-Weep/NightmareFear/compare/1.2.23...HEAD
+[1.2.23]: https://github.com/Read-Em-And-Weep/NightmareFear/compare/1.2.22...1.2.23
 [1.2.22]: https://github.com/Read-Em-And-Weep/NightmareFear/compare/1.2.21...1.2.22
 [1.2.21]: https://github.com/Read-Em-And-Weep/NightmareFear/compare/1.2.20...1.2.21
 [1.2.20]: https://github.com/Read-Em-And-Weep/NightmareFear/compare/1.2.19...1.2.20
