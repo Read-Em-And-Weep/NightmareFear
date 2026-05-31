@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 - Removed a wrap that was causing some issues with global variables in Zag Journey
+- Boons will stay expiring when upgraded or rarified
 
 ## [1.2.22] - 2026-05-17
 

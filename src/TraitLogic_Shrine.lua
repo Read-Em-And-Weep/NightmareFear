@@ -1,6 +1,13 @@
 import 'ScreenData_Purge.lua'
 --Naivety
 
+if not Contains(game.PersistentTraitKeys, "NightmareFearExpiring") then
+
+table.insert(game.PersistentTraitKeys, "NightmareFearExpiring")
+table.insert(game.PersistentTraitKeys, "NightmareFearExpiringRemaining")
+table.insert(game.PersistentTraitKeys, "CustomStatLinesWithShrineUpgrade")
+end
+
 modutil.mod.Path.Wrap("GetExpectedMaxMana", function(base)
 	local expectedMaxMana = base()
 	if GetNumShrineUpgrades("NightmareFearNoManaMetaUpgrade") >= 1 then
