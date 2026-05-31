@@ -358,7 +358,7 @@ modutil.mod.Path.Wrap("LeaveRoom", function(base, currentRun, door)
 	base(currentRun, door)
 end)
 
-modutil.mod.Path.Context.Wrap.Static("StartRoom", function(base, currentRun,currentRoom)
+--[[modutil.mod.Path.Context.Wrap.Static("StartRoom", function(base, currentRun,currentRoom)
 	modutil.mod.Path.Wrap("RefillMana", function(base)
 	if GetNumShrineUpgrades( "NightmareFearLowManaStartMetaUpgrade" ) >= 1 then
 		base()
@@ -367,6 +367,17 @@ modutil.mod.Path.Context.Wrap.Static("StartRoom", function(base, currentRun,curr
 		return base()
 	end
 	end)
+end)]]
+
+modutil.mod.Path.Wrap("RefillMana", function(base)
+	if not (GetNumShrineUpgrades( "NightmareFearLowManaStartMetaUpgrade" ) >= 1) or not CurrentRun or not CurrentRun.CurrentRoom then
+		return base()
+	end
+	if not CurrentRun.CurrentRoom.NightmareFearLowManaStartRun then
+		CurrentRun.CurrentRoom.NightmareFearLowManaStartRun = true
+		base()
+		return mod.EmptyMana()
+	end
 end)
 
 function mod.EmptyMana()

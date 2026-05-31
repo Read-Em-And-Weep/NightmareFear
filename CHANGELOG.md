@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- Removed a wrap that was causing some issues with global variables in Zag Journey
+
 ## [1.2.22] - 2026-05-17
 
 - Prevented some potential overwritings of CurrentRun, Encounter and Hero by making variables local
