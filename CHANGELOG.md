@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- NPCs like Nemesis and Heracles should no longer be so insulted by your hubris when you have the Vow of Arrogance and try to kill you if it's the first hit of the encounter
+
 ## [1.2.23] - 2026-05-31
 
 - Removed a wrap that was causing some issues with global variables in Zag Journey

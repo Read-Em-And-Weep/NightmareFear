@@ -969,7 +969,7 @@ end)
 -- Arrogance
 modutil.mod.Path.Wrap("CalculateDamageMultipliers", function(base,attacker, victim, weaponData, triggerArgs)
 	local multipliers = base(attacker, victim, weaponData, triggerArgs)
-	if GetNumShrineUpgrades("NightmareFearFirstHitMetaUpgrade") >= 1 and victim == CurrentRun.Hero and attacker ~= CurrentRun.Hero and not SessionMapState.NightmareFearFirstHitUsed then
+	if GetNumShrineUpgrades("NightmareFearFirstHitMetaUpgrade") >= 1 and multipliers ~= 0 and victim == CurrentRun.Hero and attacker ~= CurrentRun.Hero and not SessionMapState.NightmareFearFirstHitUsed then
 		 SessionMapState.NightmareFearFirstHitUsed = true
 		if GetNumShrineUpgrades("NightmareFearFirstHitMetaUpgrade") == 1 then
 			multipliers = multipliers + 1
