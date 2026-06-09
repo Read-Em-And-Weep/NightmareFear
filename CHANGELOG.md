@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.2.24] - 2026-06-09
+
 - NPCs like Nemesis and Heracles should no longer be so insulted by your hubris when you have the Vow of Arrogance and try to kill you if it's the first hit of the encounter
 
 ## [1.2.23] - 2026-05-31
@@ -149,7 +151,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - First version of the mod!
 
-[unreleased]: https://github.com/Read-Em-And-Weep/NightmareFear/compare/1.2.23...HEAD
+[unreleased]: https://github.com/Read-Em-And-Weep/NightmareFear/compare/1.2.24...HEAD
+[1.2.24]: https://github.com/Read-Em-And-Weep/NightmareFear/compare/1.2.23...1.2.24
 [1.2.23]: https://github.com/Read-Em-And-Weep/NightmareFear/compare/1.2.22...1.2.23
 [1.2.22]: https://github.com/Read-Em-And-Weep/NightmareFear/compare/1.2.21...1.2.22
 [1.2.21]: https://github.com/Read-Em-And-Weep/NightmareFear/compare/1.2.20...1.2.21
